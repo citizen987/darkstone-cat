@@ -1,0 +1,36 @@
+{
+  "nav": {
+    "home": "Inici",
+    "association": "L'Associació",
+    "activities": "Activitats",
+    "location": "On som",
+    "join": "Fes-te soci"
+  },
+  "hero": {
+    "tagline": "Associació de Jocs de Taula i Rol",
+    "description": "Un espai per compartir afició, jugar i promoure el català a través del joc.",
+    "cta": "Veure Activitats"
+  },
+  "about": {
+    "title": "Qui som?",
+    "text": "Darkstone Catalunya és una associació sense ànim de lucre dedicada a la promoció dels jocs de taula i de rol. El nostre objectiu és crear un punt de trobada per a jugadors de tots els nivells, en un ambient inclusiu i amable.",
+    "highlight1": "Foment del Català",
+    "highlight1_desc": "Promovem l'ús de la llengua catalana en l'àmbit lúdic.",
+    "highlight2": "Ludoteca Oberta",
+    "highlight2_desc": "Disposem d'una amplia col·lecció de jocs a disposició dels socis."
+  },
+  "activities": {
+    "title": "Què fem?",
+    "text": "Organitzem partides setmanals, tornejos, demostracions i jornades de portes obertes."
+  },
+  "location": {
+    "title": "On som",
+    "address_title": "ADREÇA",
+    "address": "Plaça del Tint, 4, 08224 Terrassa, Barcelona",
+    "hours_title": "HORARI",
+    "hours": "Divendres de 16:00 a 21:00 i Dissabtes de 10:00 a 14:00"
+  },
+  "footer": {
+    "rights": "Tots els drets reservats."
+  }
+}

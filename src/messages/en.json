@@ -1,0 +1,36 @@
+{
+  "nav": {
+    "home": "Home",
+    "association": "The Association",
+    "activities": "Activities",
+    "location": "Location",
+    "join": "Join us"
+  },
+  "hero": {
+    "tagline": "Board Game and RPG Association",
+    "description": "A space to share the hobby, play games, and promote the Catalan language through gaming.",
+    "cta": "See Activities"
+  },
+  "about": {
+    "title": "Who are we?",
+    "text": "Darkstone Catalunya is a non-profit association dedicated to promoting board games and role-playing games. Our goal is to create a meeting point for players of all levels in an inclusive and friendly environment.",
+    "highlight1": "Promoting Catalan",
+    "highlight1_desc": "We promote the use of the Catalan language in the gaming sphere.",
+    "highlight2": "Open Library",
+    "highlight2_desc": "We have a wide collection of games available to members."
+  },
+  "activities": {
+    "title": "What do we do?",
+    "text": "We organize weekly games, tournaments, demonstrations, and open houses."
+  },
+  "location": {
+    "title": "Location",
+    "address_title": "ADDRESS",
+    "address": "Example Street, 123, Barcelona (Example)",
+    "hours_title": "OPEN HOURS",
+    "hours": "Hours: Fridays 17:00 to 23:00 and Saturdays 10:00 to 23:00"
+  },
+  "footer": {
+    "rights": "All rights reserved."
+  }
+}

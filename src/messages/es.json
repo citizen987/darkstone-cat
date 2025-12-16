@@ -1,0 +1,36 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "association": "La Asociación",
+    "activities": "Actividades",
+    "location": "Dónde estamos",
+    "join": "Hazte socio"
+  },
+  "hero": {
+    "tagline": "Asociación de Juegos de Mesa y Rol",
+    "description": "Un espacio para compartir afición, jugar y promover el catalán a través del juego.",
+    "cta": "Ver Actividades"
+  },
+  "about": {
+    "title": "¿Quiénes somos?",
+    "text": "Darkstone Catalunya es una asociación sin ánimo de lucro dedicada a la promoción de los juegos de mesa y rol. Nuestro objetivo es crear un punto de encuentro para jugadores de todos los niveles, en un ambiente inclusivo y amable.",
+    "highlight1": "Fomento del Catalán",
+    "highlight1_desc": "Promovemos el uso de la lengua catalana en el ámbito lúdico.",
+    "highlight2": "Ludoteca Abierta",
+    "highlight2_desc": "Disponemos de una amplia colección de juegos a disposición de los socios."
+  },
+  "activities": {
+    "title": "¿Qué hacemos?",
+    "text": "Organizamos partidas semanales, torneos, demostraciones y jornadas de puertas abiertas."
+  },
+  "location": {
+    "title": "Dónde estamos",
+    "address_title": "DIRECCIÓN",
+    "address": "Calle del Ejemplo, 123, Barcelona (Ejemplo)",
+    "hours_title": "HORARIO",
+    "hours": "Horario: Viernes de 17:00 a 23:00 y Sábados de 10:00 a 23:00"
+  },
+  "footer": {
+    "rights": "Todos los derechos reservados."
+  }
+}
