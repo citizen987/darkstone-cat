@@ -57,6 +57,7 @@ export default function NavBar() {
               key={link.name}
               href={link.href}
               className="text-sm font-medium text-stone-600 transition-colors hover:text-stone-900"
+              aria-label={t("menu_button")}
             >
               {link.name}
             </Link>

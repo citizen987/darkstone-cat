@@ -4,7 +4,8 @@
     "association": "The Association",
     "activities": "Activities",
     "location": "Location",
-    "join": "Join us"
+    "join": "Join us",
+    "menu_button": "Menu button"
   },
   "hero": {
     "tagline": "Board Game and RPG Association",
@@ -28,7 +29,8 @@
     "address_title": "ADDRESS",
     "address": "Example Street, 123, Barcelona (Example)",
     "hours_title": "OPEN HOURS",
-    "hours": "Hours: Fridays 17:00 to 23:00 and Saturdays 10:00 to 23:00"
+    "hours": "Hours: Fridays 17:00 to 23:00 and Saturdays 10:00 to 23:00",
+    "map": "Map"
   },
   "footer": {
     "rights": "All rights reserved."

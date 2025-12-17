@@ -4,7 +4,8 @@
     "association": "L'Associació",
     "activities": "Activitats",
     "location": "On som",
-    "join": "Fes-te soci"
+    "join": "Fes-te soci",
+    "menu_button": "Botó de menú"
   },
   "hero": {
     "tagline": "Associació de Jocs de Taula i Rol",
@@ -28,7 +29,8 @@
     "address_title": "ADREÇA",
     "address": "Plaça del Tint, 4, 08224 Terrassa, Barcelona",
     "hours_title": "HORARI",
-    "hours": "Divendres de 16:00 a 21:00 i Dissabtes de 10:00 a 14:00"
+    "hours": "Divendres de 16:00 a 21:00 i Dissabtes de 10:00 a 14:00",
+    "map": "Mapa"
   },
   "footer": {
     "rights": "Tots els drets reservats."

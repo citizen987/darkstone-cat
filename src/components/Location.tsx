@@ -65,6 +65,7 @@ export default function Location() {
                 referrerPolicy="no-referrer-when-downgrade"
                 onLoad={() => setMapLoaded(true)}
                 className={!mapLoaded ? "invisible" : "visible"}
+                title={t("map")}
             ></iframe>
           </div>
         </div>
