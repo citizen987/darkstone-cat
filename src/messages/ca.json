@@ -22,7 +22,25 @@
   },
   "activities": {
     "title": "Què fem?",
-    "text": "Organitzem partides setmanals, tornejos, demostracions i jornades de portes obertes."
+    "text": "Organitzem partides setmanals, tornejos, demostracions i jornades de portes obertes.",
+    "items": {
+      "board_games": {
+        "title": "Jocs de Taula",
+        "description": "Des dels clàssics fins a les últimes novetats. Disposem d'una ludoteca en constant creixement."
+      },
+      "rpg": {
+        "title": "Jocs de Rol",
+        "description": "Campanyes de llarga durada i one-shots. D&D, Pathfinder, Cthulhu i molts sistemes indies."
+      },
+      "events": {
+        "title": "Esdeveniments i Tornejos",
+        "description": "Organitzem tornejos amistosos i competitius, així com jornades temàtiques especials."
+      },
+      "egara": {
+        "title": "Egara Juga",
+        "description": "El nostre esdeveniment insígnia. Un cap de setmana ple de jocs, sortejos i comunitat obert a tota la ciutat."
+      }
+    }
   },
   "location": {
     "title": "On som",

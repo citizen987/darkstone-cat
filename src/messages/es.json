@@ -22,7 +22,25 @@
   },
   "activities": {
     "title": "¿Qué hacemos?",
-    "text": "Organizamos partidas semanales, torneos, demostraciones y jornadas de puertas abiertas."
+    "text": "Organizamos partidas semanales, torneos, demostraciones y jornadas de puertas abiertas.",
+    "items": {
+      "board_games": {
+        "title": "Juegos de Mesa",
+        "description": "Desde los clásicos hasta las últimas novedades. Disponemos de una ludoteca en constante crecimiento."
+      },
+      "rpg": {
+        "title": "Juegos de Rol",
+        "description": "Campañas de larga duración y one-shots. D&D, Pathfinder, Cthulhu y muchos sitemas indies."
+      },
+      "events": {
+        "title": "Eventos y Torneos",
+        "description": "Organizamos torneos amistosos y competitivos, así como jornadas temáticas especiales."
+      },
+      "egara": {
+        "title": "Egara Juga",
+        "description": "Nuestro evento insignia. Un fin de semana lleno de juegos, sorteos y comunidad abierto a toda la ciudad."
+      }
+    }
   },
   "location": {
     "title": "Dónde estamos",

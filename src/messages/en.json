@@ -22,7 +22,25 @@
   },
   "activities": {
     "title": "What do we do?",
-    "text": "We organize weekly games, tournaments, demonstrations, and open houses."
+    "text": "We organize weekly games, tournaments, demonstrations, and open houses.",
+    "items": {
+      "board_games": {
+        "title": "Board Games",
+        "description": "From classics to the latest releases. We have a constantly growing game library."
+      },
+      "rpg": {
+        "title": "Role Playing Games",
+        "description": "Long-running campaigns and one-shots. D&D, Pathfinder, Cthulhu, and many indie systems."
+      },
+      "events": {
+        "title": "Events & Tournaments",
+        "description": "We organize friendly and competitive tournaments, as well as special themed days."
+      },
+      "egara": {
+        "title": "Egara Juga",
+        "description": "Our flagship event. A weekend full of games, raffles, and community open to the whole city."
+      }
+    }
   },
   "location": {
     "title": "Location",
