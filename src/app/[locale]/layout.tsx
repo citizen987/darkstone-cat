@@ -31,7 +31,7 @@ export default async function LocaleLayout({
   const messages = await getMessages();
  
   return (
-    <html lang={locale}>
+    <html lang={locale} suppressHydrationWarning>
       <body className="bg-[#eee8dc] text-zinc-800">
         <NextIntlClientProvider messages={messages}>
           {children}
