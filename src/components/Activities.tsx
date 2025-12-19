@@ -18,10 +18,23 @@ export default function Activities() {
   const [current, setCurrent] = React.useState(0);
   const [count, setCount] = React.useState(0);
 
+  const scrollRef = React.useRef<HTMLDivElement>(null);
+
   // Autoplay plugin instance ref
   const plugin = React.useRef(
     Autoplay({ delay: 5000, stopOnInteraction: false })
   );
+
+  const handleSelect = (index: number) => {
+    api?.scrollTo(index);
+    plugin.current.reset();
+    // Centrar el botón al clicarlo
+    scrollRef.current?.children[index].scrollIntoView({ 
+      behavior: 'smooth', 
+      inline: 'center', 
+      block: 'nearest' 
+    });
+  };
 
   React.useEffect(() => {
     if (!api) {
@@ -32,7 +45,10 @@ export default function Activities() {
     setCurrent(api.selectedScrollSnap() + 1);
 
     api.on("select", () => {
-      setCurrent(api.selectedScrollSnap() + 1);
+      const index = api.selectedScrollSnap();
+      console.log(index);
+      setCurrent(index + 1);
+      handleSelect(index);
     });
   }, [api]);
 
@@ -76,34 +92,59 @@ export default function Activities() {
           <h2 className="mb-6 text-4xl font-bold tracking-tight text-stone-900 md:text-5xl">
             {t("title")}
           </h2>
-          <p className="mx-auto mt-6 max-w-3xl text-xl leading-relaxed text-stone-600">
+          <p className="mx-auto mt-6 max-w-4xl text-xl leading-relaxed text-stone-600">
             {t("text")}
           </p>
-          <div className="mt-8 flex flex-wrap justify-center gap-6">
-            {activityItems.map((item, index) => {
-              const isActive = current === index + 1;
-              return (
-                <button
-                  key={`nav-${item.id}`}
-                  onClick={() => {
-                    api?.scrollTo(index);
-                    plugin.current.reset();
-                  }}
-                  className={cn(
-                    "relative px-4 py-2 rounded-full font-semibold transition-all duration-500 ease-out",
-                    isActive 
-                      ? "bg-stone-800 text-white scale-115 shadow-xl ring-4 ring-stone-800/10" 
-                      : "bg-stone-100 text-stone-500 hover:bg-stone-200 scale-100"
-                  )}
-                >
-                  {t(`items.${item.id}.title`)}
-                </button>
-              );
-            })}
+          <div className="flex items-center justify-center my-2">
+            {/* Contenedor Píldora */}
+            <div className="inline-flex items-center rounded-full bg-stone-100 p-1.5 shadow-sm max-w-[95vw] sm:max-w-full border border-stone-200 ">
+              
+              {/* Botón Anterior (Solo para mover el scroll de los botones) */}
+              <button 
+                onClick={() => handlePrevious() }
+                className="rounded-full p-1.5 text-stone-500 hover:text-stone-900 transition-colors"
+              >
+                <ChevronLeft className="h-5 w-5" />
+              </button>
+
+              {/* Contenedor de Tabs con Scroll */}
+              <div 
+                ref={scrollRef}
+                className="no-scrollbar flex overflow-x-auto py-1 px-1 sm:px-2 scroll-smooth snap-x snap-mandatory"
+              >
+                {activityItems.map((item, index) => {
+                  const isActive = current === index + 1;
+                  return (
+                    <button
+                      key={`tab-${item.id}`}
+                      onClick={() => {
+                        handleSelect(index);
+                      }}
+                      className={cn(
+                        "whitespace-nowrap mx-0.5 sm:mx-1 px-4 py-1.5 text-sm font-medium rounded-full transition-all duration-300 snap-center",
+                        isActive 
+                          ? "bg-stone-800 text-white shadow-md scale-105" 
+                          : "bg-transparent text-stone-500 hover:text-stone-800"
+                      )}
+                    >
+                      {t(`items.${item.id}.title`)}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Botón Siguiente */}
+              <button 
+                onClick={() => handleNext() }
+                className="rounded-full p-1.5 text-stone-500 hover:text-stone-900 transition-colors"
+              >
+                <ChevronRight className="h-5 w-5" />
+              </button>
+            </div>
           </div>
         </div>
 
-        <div className="mx-auto max-w-6xl">
+        <div className="mx-auto">
           <Carousel
             setApi={setApi}
             plugins={[plugin.current]}
@@ -140,21 +181,20 @@ export default function Activities() {
               ))}
             </CarouselContent>
             
-            {/* Arrows - Centered on sides */}
+            {/* Arrows */}
             <button 
               onClick={handlePrevious}
-              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x md:-translate-x p-2 text-stone-800 opacity-10 hover:opacity-80 transition-colors duration-300 z-10"
+              className="absolute left-0 top-0 h-full w-12 md:w-16 flex items-center justify-center text-stone-800 opacity-0 hover:opacity-100 transition-opacity duration-300 z-10 focus:outline-none"
               aria-label="Previous slide"
             >
-              <ChevronLeft className="h-8 w-8 md:h-12 md:w-12" />
+              <ChevronLeft className="h-8 w-8 md:h-12 md:w-12 p-1" />
             </button>
-
             <button 
               onClick={handleNext}
-              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x md:translate-x p-2 text-stone-800 opacity-10 hover:opacity-80 transition-colors duration-300 z-10"
+              className="absolute right-0 top-0 h-full w-12 md:w-16 flex items-center justify-center text-stone-800 opacity-0 hover:opacity-100 transition-opacity duration-300 z-10 focus:outline-none"
               aria-label="Next slide"
             >
-              <ChevronRight className="h-8 w-8 md:h-12 md:w-12" />
+              <ChevronRight className="h-8 w-8 md:h-12 md:w-12 p-1" />
             </button>
             
           </Carousel>
