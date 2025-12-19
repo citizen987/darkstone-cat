@@ -23,6 +23,7 @@ export default function NavBar() {
     { name: t("home"), href: "#hero" },
     { name: t("association"), href: "#about" },
     { name: t("activities"), href: "#activities" },
+    { name: t("schedule"), href: "#schedule" },
     { name: t("location"), href: "#location" },
   ];
 

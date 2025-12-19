@@ -92,7 +92,7 @@ export default function Activities() {
           <h2 className="mb-6 text-4xl font-bold tracking-tight text-stone-900 md:text-5xl">
             {t("title")}
           </h2>
-          <p className="mx-auto mt-6 max-w-4xl text-xl leading-relaxed text-stone-600">
+          <p className="mx-auto mt-6 max-w-2xl text-xl leading-relaxed text-stone-600">
             {t("text")}
           </p>
           <div className="flex items-center justify-center my-2">

@@ -1,9 +1,10 @@
 {
   "nav": {
     "home": "Inici",
-    "association": "L'Associació",
-    "activities": "Activitats",
-    "location": "On som",
+    "association": "Qui som?",
+    "activities": "Que fem?",
+    "location": "On?",
+    "schedule": "Quan quedem?",
     "join": "Fes-te soci",
     "menu_button": "Botó de menú"
   },
@@ -49,6 +50,14 @@
     "hours_title": "HORARI",
     "hours": "Divendres de 16:00 a 21:00 i Dissabtes de 10:00 a 14:00",
     "map": "Mapa"
+  },
+  "schedule": {
+    "title": "Quan quedem?",
+    "friday": "Divendres",
+    "saturday": "Dissabtes",
+    "friday_hours": "16:00 PM - 20:00 PM",
+    "saturday_hours": "10:00 AM - 13:30 PM",
+    "general_info": "Ens trobem generalment els divendres a la tarda i els dissabtes al matí."
   },
   "footer": {
     "rights": "Tots els drets reservats."

@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 
 export default function Location() {
   const t = useTranslations("location");
+  const t_sched = useTranslations("schedule");
   const [mapLoaded, setMapLoaded] = useState(false);
   const mapSrc = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d746.2896975282518!2d2.0026901364326446!3d41.56580783124514!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12a493005ac30167%3A0x86e7aad1b1aa8d36!2sDarkstone%20Catalunya!5e0!3m2!1sca!2ses!4v1765521866880!5m2!1sca!2ses";
 
@@ -29,7 +30,10 @@ export default function Location() {
                 <h3 className="mb-2 text-lg font-semibold text-stone-400 uppercase tracking-wider">
                   Open Hours
                 </h3>
-                <p className="text-xl font-light">{t("hours")}</p>
+                <div className="text-xl font-light space-y-1">
+                  <p>{t_sched("friday")}: {t_sched("friday_hours")}</p>
+                  <p>{t_sched("saturday")}: {t_sched("saturday_hours")}</p>
+                </div>
               </div>
 
               <a

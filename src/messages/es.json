@@ -4,6 +4,7 @@
     "association": "La Asociación",
     "activities": "Actividades",
     "location": "Dónde estamos",
+    "schedule": "Horarios",
     "join": "Hazte socio",
     "menu_button": "Botón de menú"
   },
@@ -49,6 +50,14 @@
     "hours_title": "HORARIO",
     "hours": "Horario: Viernes de 17:00 a 23:00 y Sábados de 10:00 a 23:00",
     "map": "Mapa"
+  },
+  "schedule": {
+    "title": "¿Cuando quedemos?",
+    "friday": "Viernes",
+    "saturday": "Sábados",
+    "friday_hours": "16:00 PM - 20:00 PM",
+    "saturday_hours": "10:00 AM - 13:30 PM",
+    "general_info": "Nos reunimos generalmente los viernes por la tarde y los sábados por la mañana."
   },
   "footer": {
     "rights": "Todos los derechos reservados."

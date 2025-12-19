@@ -4,6 +4,7 @@
     "association": "The Association",
     "activities": "Activities",
     "location": "Location",
+    "schedule": "Schedule",
     "join": "Join us",
     "menu_button": "Menu button"
   },
@@ -43,12 +44,20 @@
     }
   },
   "location": {
-    "title": "Location",
+    "title": "Where are we?",
     "address_title": "ADDRESS",
     "address": "Example Street, 123, Barcelona (Example)",
     "hours_title": "OPEN HOURS",
     "hours": "Hours: Fridays 17:00 to 23:00 and Saturdays 10:00 to 23:00",
     "map": "Map"
+  },
+  "schedule": {
+    "title": "When do we meet?",
+    "friday": "Fridays",
+    "saturday": "Saturdays",
+    "friday_hours": "4:00 PM - 8:00 PM",
+    "saturday_hours": "10:00 AM - 1:30 PM",
+    "general_info": "We generally meet on Friday afternoons and Saturday mornings."
   },
   "footer": {
     "rights": "All rights reserved."
