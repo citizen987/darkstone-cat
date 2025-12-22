@@ -25,10 +25,32 @@ export default function Activities() {
     Autoplay({ delay: 5000, stopOnInteraction: false })
   );
 
+  const scrollToTab = (index: number) => {
+    const container = scrollRef.current;
+    if (container) {
+      const tab = container.children[index] as HTMLElement;
+      if (tab) {
+        // Calcular la posición para centrar el tab dentro del contenedor
+        const containerWidth = container.clientWidth;
+        const tabLeft = tab.offsetLeft;
+        const tabWidth = tab.clientWidth;
+        
+        const scrollLeft = tabLeft - (containerWidth / 2) + (tabWidth / 2);
+        
+        container.scrollTo({
+          left: scrollLeft,
+          behavior: 'smooth'
+        });
+      }
+    }
+  };
+
   const handleSelect = (index: number) => {
     api?.scrollTo(index);
     plugin.current.reset();
-    // Centrar el botón al clicarlo
+    
+    // Comportamiento "Manual": Usamos scrollIntoView que puede mover la página
+    // Esto es lo que el usuario quería restaurar solo para interacciones manuales
     scrollRef.current?.children[index].scrollIntoView({ 
       behavior: 'smooth', 
       inline: 'center', 
@@ -46,9 +68,10 @@ export default function Activities() {
 
     api.on("select", () => {
       const index = api.selectedScrollSnap();
-      console.log(index);
       setCurrent(index + 1);
-      handleSelect(index);
+      // Comportamiento "Automático": Usamos nuestra función personalizada que SOLO mueve el scroll horizontal del contenedor
+      // Esto evita que la página entera salte cuando pasa el autoplay
+      scrollToTab(index);
     });
   }, [api]);
 
@@ -86,7 +109,7 @@ export default function Activities() {
   ];
 
   return (
-    <section id="activities" className="bg-stone-200/50 py-24 overflow-hidden">
+    <section id="activities" className="py-24 overflow-hidden">
       <div className="container mx-auto px-6">
         <div className="text-center mb-6">
           <h2 className="mb-6 text-4xl font-bold tracking-tight text-stone-900 md:text-5xl">
