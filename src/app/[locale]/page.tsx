@@ -3,6 +3,7 @@ import Hero from "@/components/Hero";
 import About from "@/components/About";
 import Activities from "@/components/Activities";
 import Schedule from "@/components/Schedule";
+import JoinUs from "@/components/JoinUs";
 import Location from "@/components/Location";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -15,6 +16,7 @@ export default function HomePage() {
         <About />
         <Activities />
         <Schedule />
+        <JoinUs />
         <Location />
         <Footer />
         <ScrollToTop />

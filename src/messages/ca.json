@@ -61,5 +61,15 @@
   },
   "footer": {
     "rights": "Tots els drets reservats."
+  },
+  "join_us": {
+    "title": "Uneix-te a la nostra comunitat",
+    "subtitle": "Connecta amb nosaltres i juga!",
+    "telegram_title": "Telegram",
+    "telegram_description": "Tenim un xat a Telegram on parlem de moltes coses, fem plans i comentem què ens ve de gust jugar el cap de setmana a Darkstone.",
+    "join_telegram": "Unir-se a Telegram",
+    "ludoya_title": "Ludoya",
+    "ludoya_description": "A més utilitzem Ludoya, una app social específica per a jocs de taula. Aquí organitzem esdeveniments i programem les partides, pots apuntar-te i xerrar sobre elles.",
+    "check_ludoya": "Descobrir Ludoya"
   }
 }

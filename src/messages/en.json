@@ -61,5 +61,15 @@
   },
   "footer": {
     "rights": "All rights reserved."
+  },
+  "join_us": {
+    "title": "Join our Community",
+    "subtitle": "Connect with us and play!",
+    "telegram_title": "Telegram",
+    "telegram_description": "We have a chat on telegram, where we talk about many things and also make plans and say what we feel like playing that weekend in Darkstone.",
+    "join_telegram": "Join Telegram",
+    "ludoya_title": "Ludoya",
+    "ludoya_description": "In addition we use Ludoya, a social app specific for board games. In this we organize events and schedule the games we will play, and you can sign up and chat about them.",
+    "check_ludoya": "Discover Ludoya"
   }
 }
