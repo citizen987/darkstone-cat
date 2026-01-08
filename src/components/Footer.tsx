@@ -7,7 +7,7 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-stone-300 py-12 text-center text-stone-500 bg-[#eee8dc]">
+    <footer className="border-t border-stone-300 py-12 text-center text-stone-500 bg-brand-beige">
         <div className="container mx-auto px-6 flex flex-col items-center gap-6">
             <p>&copy; {currentYear} Darkstone Catalunya. {t("rights")}</p>
             <div className="flex gap-4">

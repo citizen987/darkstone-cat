@@ -61,7 +61,7 @@ export default function JoinUs() {
                 href="https://app.ludoya.com/darkstonecat?inviteCode=link&lang=ca" 
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center px-8 py-3 text-base font-medium text-stone-900 bg-[#eee8dc] rounded-full hover:bg-white transition-colors"
+                className="inline-flex items-center justify-center px-8 py-3 text-base font-medium text-stone-900 bg-brand-beige rounded-full hover:bg-white transition-colors"
                 >
                 {t("check_ludoya")}
                 </Link>

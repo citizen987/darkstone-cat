@@ -31,7 +31,7 @@ export default function NavBar() {
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-[#eee8dc]/90 shadow-sm backdrop-blur-md py-3"
+          ? "bg-brand-beige/90 shadow-sm backdrop-blur-md py-3"
           : "bg-transparent py-5"
       }`}
     >
@@ -92,7 +92,7 @@ export default function NavBar() {
 
       {/* Mobile Menu Overlay */}
       <div
-        className={`absolute top-full left-0 w-full overflow-hidden bg-[#eee8dc]/95 shadow-lg backdrop-blur-md transition-all duration-300 md:hidden ${
+        className={`absolute top-full left-0 w-full overflow-hidden bg-brand-beige/95 shadow-lg backdrop-blur-md transition-all duration-300 md:hidden ${
           mobileMenuOpen ? "max-h-96 py-6 border-t border-stone-200" : "max-h-0 py-0"
         }`}
       >
