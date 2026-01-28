@@ -3,8 +3,8 @@ import { type Metadata } from "next";
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
-import { routing } from '@/i18n/routing'; // We need to create this or inline it. For now, inline check.
 import '@/styles/globals.css';
+import SmoothScroll from "@/components/SmoothScroll";
 
 export const metadata: Metadata = {
   title: "Darkstone Cat",
@@ -21,20 +21,19 @@ export default async function LocaleLayout({
 }) {
   const { locale } = await params;
   
-  // Ensure that the incoming `locale` is valid
-  if (!['ca', 'es', 'en'].includes(locale as any)) {
+  if (!['ca', 'es', 'en'].includes(locale)) {
     notFound();
   }
  
-  // Providing all messages to the client
-  // side is the easiest way to get started
   const messages = await getMessages();
  
   return (
     <html lang={locale} suppressHydrationWarning>
       <body className="bg-brand-beige text-zinc-800">
         <NextIntlClientProvider messages={messages}>
-          {children}
+          <SmoothScroll>
+            {children}
+          </SmoothScroll>
         </NextIntlClientProvider>
       </body>
     </html>
