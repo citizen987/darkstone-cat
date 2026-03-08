@@ -58,33 +58,52 @@ export default async function EventsPage({
 
   // Build Event schema.org JSON-LD for each event
   const allEvents = [...eventsResult.regularEvents, ...eventsResult.specialEvents];
-  const eventJsonLd = allEvents.slice(0, 20).map((event) => ({
-    "@context": "https://schema.org",
-    "@type": "Event",
-    name: event.title,
-    description: event.description || event.title,
-    startDate: event.startsAt,
-    endDate: event.endsAt,
-    eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
-    eventStatus: "https://schema.org/EventScheduled",
-    url: event.ludoyaUrl,
-    organizer: {
-      "@type": "Organization",
-      name: "Darkstone Catalunya",
-      url: "https://www.darkstone.cat",
-    },
-    location: {
-      "@type": "Place",
-      name: "Centre Cívic Ca N'Aurell",
-      address: {
-        "@type": "PostalAddress",
-        streetAddress: "Plaça del Tint, 4",
-        addressLocality: "Terrassa",
-        postalCode: "08224",
-        addressCountry: "ES",
+  const eventJsonLd = allEvents.slice(0, 20).map((event) => {
+    const startMs = new Date(event.startsAt).getTime();
+    const offerValidFrom = new Date(startMs - 30 * 24 * 60 * 60 * 1000).toISOString();
+
+    return {
+      "@context": "https://schema.org",
+      "@type": "Event",
+      name: event.title,
+      description: event.description || event.title,
+      startDate: event.startsAt,
+      endDate: event.endsAt,
+      eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+      eventStatus: "https://schema.org/EventScheduled",
+      url: event.ludoyaUrl,
+      image: event.imageUrl || "https://www.darkstone.cat/images/darkstone_logo_768px.webp",
+      performer: {
+        "@type": "Organization",
+        name: "Darkstone Catalunya",
+        url: "https://www.darkstone.cat",
       },
-    },
-  }));
+      organizer: {
+        "@type": "Organization",
+        name: "Darkstone Catalunya",
+        url: "https://www.darkstone.cat",
+      },
+      offers: {
+        "@type": "Offer",
+        price: "0",
+        priceCurrency: "EUR",
+        availability: "https://schema.org/InStock",
+        validFrom: offerValidFrom,
+        url: event.ludoyaUrl,
+      },
+      location: {
+        "@type": "Place",
+        name: "Centre Cívic Ca N'Aurell",
+        address: {
+          "@type": "PostalAddress",
+          streetAddress: "Plaça del Tint, 4",
+          addressLocality: "Terrassa",
+          postalCode: "08224",
+          addressCountry: "ES",
+        },
+      },
+    };
+  });
 
   return (
     <main id="main-content" className="relative min-h-screen font-sans selection:bg-stone-300">
