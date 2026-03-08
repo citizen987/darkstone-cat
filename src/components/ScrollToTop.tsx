@@ -26,12 +26,12 @@ export default function ScrollToTop() {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-40 md:bottom-8 md:right-8">
+    <div className={`fixed bottom-6 right-6 z-40 md:bottom-8 md:right-8 ${isVisible ? "" : "pointer-events-none"}`}>
       <button
         type="button"
         onClick={scrollToTop}
         className={`group flex items-center justify-center rounded-full bg-stone-900/80 p-3 text-stone-50 shadow-lg backdrop-blur-sm transition-all duration-300 hover:bg-stone-900 hover:shadow-stone-900/30 ${
-          isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0 pointer-events-none"
+          isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
         }`}
         aria-label="Scroll to top"
       >

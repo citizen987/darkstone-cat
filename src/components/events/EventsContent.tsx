@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { motion } from "motion/react";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { MdChevronLeft, MdChevronRight, MdOpenInNew } from "react-icons/md";
 import type { LudoyaEvent } from "@/lib/ludoya";
 
@@ -94,6 +94,76 @@ function useCarousel(total: number, perPage: number) {
 }
 
 // ---------------------------------------------------------------------------
+// Drag/swipe hook
+// ---------------------------------------------------------------------------
+
+function useDrag(page: number, maxPage: number, onNext: () => void, onPrev: () => void) {
+  const startX = useRef(0);
+  const containerW = useRef(0);
+  const dragged = useRef(false);
+  const pressed = useRef(false);  // pointer is down
+  const active = useRef(false);   // drag threshold exceeded, now swiping
+  const [dragOffset, setDragOffset] = useState(0);
+  const [isSwiping, setIsSwiping] = useState(false);
+
+  const pageRef = useRef(page);
+  pageRef.current = page;
+  const maxPageRef = useRef(maxPage);
+  maxPageRef.current = maxPage;
+
+  const DRAG_START_THRESHOLD = 8; // px before drag activates
+
+  const onPointerDown = useCallback((e: React.PointerEvent) => {
+    startX.current = e.clientX;
+    containerW.current = (e.currentTarget as HTMLElement).offsetWidth || 1;
+    dragged.current = false;
+    pressed.current = true;
+    active.current = false;
+  }, []);
+
+  const onPointerMove = useCallback((e: React.PointerEvent) => {
+    if (!pressed.current) return;
+    const diff = e.clientX - startX.current;
+
+    // Activate drag only after exceeding threshold
+    if (!active.current) {
+      if (Math.abs(diff) < DRAG_START_THRESHOLD) return;
+      active.current = true;
+      setIsSwiping(true);
+    }
+
+    // Clamp at boundaries
+    let clamped = diff;
+    if (pageRef.current === 0 && clamped > 0) clamped = 0;
+    if (pageRef.current === maxPageRef.current && clamped < 0) clamped = 0;
+    setDragOffset(clamped);
+  }, []);
+
+  const onPointerUp = useCallback(
+    (e: React.PointerEvent) => {
+      if (!pressed.current) return;
+      pressed.current = false;
+      if (!active.current) return; // no drag happened — let click through
+      active.current = false;
+      const diff = e.clientX - startX.current;
+      const threshold = containerW.current * 0.15;
+      setDragOffset(0);
+      setIsSwiping(false);
+      dragged.current = true;
+      if (diff < -threshold && pageRef.current < maxPageRef.current) onNext();
+      else if (diff > threshold && pageRef.current > 0) onPrev();
+    },
+    [onNext, onPrev]
+  );
+
+  const onClickCapture = useCallback((e: React.MouseEvent) => {
+    if (dragged.current) { e.preventDefault(); e.stopPropagation(); dragged.current = false; }
+  }, []);
+
+  return { onPointerDown, onPointerMove, onPointerUp, onClickCapture, dragOffset, isSwiping };
+}
+
+// ---------------------------------------------------------------------------
 // ProgressiveEventImage
 // ---------------------------------------------------------------------------
 
@@ -170,14 +240,6 @@ function EventCard({
           </div>
         )}
 
-        {/* Date badge overlay */}
-        <div className="absolute top-3 left-3 rounded-lg bg-brand-orange px-3 py-1.5 text-center leading-tight text-white shadow-lg">
-          <span className="block text-xs font-semibold uppercase">
-            {badge.dayAbbr}. {badge.date}
-          </span>
-          <span className="block text-sm font-bold">{badge.time}</span>
-        </div>
-
       </a>
 
       {/* Text section */}
@@ -190,23 +252,21 @@ function EventCard({
         </p>
 
         {/* Game pills */}
-        {event.plannedPlays.length > 0 && (
-          <div className="flex flex-wrap gap-1.5">
-            {event.plannedPlays.slice(0, 12).map((pp, i) => (
-              <span
-                key={i}
-                className="rounded-full bg-stone-custom/10 px-2.5 py-0.5 text-xs font-medium text-stone-custom/70"
-              >
-                {pp.gameName}
-              </span>
-            ))}
-            {event.plannedPlays.length > 12 && (
-              <span className="rounded-full bg-stone-custom/10 px-2.5 py-0.5 text-xs font-medium text-stone-custom/70">
-                +{event.plannedPlays.length - 12}
-              </span>
-            )}
-          </div>
-        )}
+        <div className="flex h-[4.5rem] flex-wrap content-start gap-1.5 overflow-hidden">
+          {event.plannedPlays.slice(0, 12).map((pp, i) => (
+            <span
+              key={i}
+              className="rounded-full bg-stone-custom/10 px-2.5 py-0.5 text-xs font-medium text-stone-custom/70"
+            >
+              {pp.gameName}
+            </span>
+          ))}
+          {event.plannedPlays.length > 12 && (
+            <span className="rounded-full bg-stone-custom/10 px-2.5 py-0.5 text-xs font-medium text-stone-custom/70">
+              +{event.plannedPlays.length - 12}
+            </span>
+          )}
+        </div>
 
         <div className="mt-auto pt-2">
           <a
@@ -230,15 +290,19 @@ function EventCard({
 
 function EventSection({
   title,
+  description,
   events,
   locale,
 }: {
   title: string;
+  description: string;
   events: LudoyaEvent[];
   locale: string;
 }) {
   const carousel = useCarousel(events.length, 2);
   const mobileCarousel = useCarousel(events.length, 1);
+  const desktopDrag = useDrag(carousel.page, carousel.maxPage, carousel.next, carousel.prev);
+  const mobileDrag = useDrag(mobileCarousel.page, mobileCarousel.maxPage, mobileCarousel.next, mobileCarousel.prev);
 
   return (
     <motion.div
@@ -247,54 +311,111 @@ function EventSection({
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.5 }}
     >
-      <div className="rounded-2xl bg-stone-custom p-4 sm:p-6 md:p-8">
-        <h2 className="mb-6 text-2xl font-bold text-brand-white sm:text-3xl">
-          {title}
-        </h2>
+      <div className="relative overflow-hidden rounded-2xl bg-stone-custom p-4 sm:p-6 md:p-8">
+        {/* Decorative meeple background — adjust these values to tweak */}
+        {(() => {
+          const MEEPLE_BOTTOM = "15%";     // vertical position from bottom
+          const MEEPLE_LEFT = "-5%";       // horizontal position from left
+          const MEEPLE_PUSH_DOWN = "45%"; // how much to push below bottom (shows top half)
+          const MEEPLE_SIZE = "40%";      // width relative to container
+          const MEEPLE_ROTATION = "30";   // degrees clockwise
+          const MEEPLE_OPACITY = "0.07";  // 0–1
+          return (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src="/images/icons/meeple.svg"
+              alt=""
+              aria-hidden="true"
+              className="pointer-events-none absolute hidden md:block"
+              style={{
+                bottom: MEEPLE_BOTTOM,
+                left: MEEPLE_LEFT,
+                width: MEEPLE_SIZE,
+                opacity: Number(MEEPLE_OPACITY),
+                filter: "invert(1)",
+                transform: `translateY(${MEEPLE_PUSH_DOWN}) rotate(${MEEPLE_ROTATION}deg)`,
+              }}
+            />
+          );
+        })()}
 
-        {/* Desktop carousel (md+) — all cards in DOM for consistent height */}
-        <div className="hidden md:block">
-          <div className="overflow-hidden">
-            <div
-              className="flex transition-transform duration-300 ease-in-out"
-              style={{ transform: `translateX(-${carousel.page * 100}%)` }}
-            >
-              {/* Render cards in pairs, each pair takes full width */}
-              {Array.from({ length: carousel.maxPage + 1 }, (_, pageIdx) => (
-                <div
-                  key={pageIdx}
-                  className="grid w-full flex-shrink-0 grid-cols-2 gap-6"
-                >
-                  {events.slice(pageIdx * 2, pageIdx * 2 + 2).map((event) => (
-                    <EventCard key={event.id} event={event} locale={locale} />
-                  ))}
-                </div>
-              ))}
-            </div>
+        {/* Desktop (md+) — left: title+description, right: carousel + controls */}
+        <div className="relative hidden md:flex md:gap-8">
+          <div className="flex w-1/3 flex-shrink-0 flex-col">
+            <h2 className="text-2xl font-bold text-brand-white sm:text-3xl">
+              {title}
+            </h2>
+            <p className="mt-4 text-sm leading-relaxed text-brand-white/60">
+              {description}
+            </p>
           </div>
 
-          {carousel.showControls && (
-            <CarouselControls
-              page={carousel.page}
-              maxPage={carousel.maxPage}
-              hasPrev={carousel.hasPrev}
-              hasNext={carousel.hasNext}
-              onPrev={carousel.prev}
-              onNext={carousel.next}
-              onGoTo={carousel.goTo}
-            />
-          )}
+          <div className="flex min-w-0 flex-1 flex-col">
+            <div
+              className="overflow-hidden"
+              onPointerDown={desktopDrag.onPointerDown}
+              onPointerMove={desktopDrag.onPointerMove}
+              onPointerUp={desktopDrag.onPointerUp}
+              onClickCapture={desktopDrag.onClickCapture}
+              style={{ touchAction: "pan-y", cursor: "grab" }}
+            >
+              <div
+                className={`flex ${desktopDrag.isSwiping ? "" : "transition-transform duration-300 ease-in-out"}`}
+                style={{ transform: `translateX(calc(-${carousel.page * 100}% + ${desktopDrag.dragOffset}px))` }}
+              >
+                {Array.from({ length: carousel.maxPage + 1 }, (_, pageIdx) => (
+                  <div
+                    key={pageIdx}
+                    className="flex w-full flex-shrink-0"
+                  >
+                    {events.slice(pageIdx * 2, pageIdx * 2 + 2).map((event) => (
+                      <div key={event.id} className="w-1/2 px-3">
+                        <EventCard event={event} locale={locale} />
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {carousel.showControls && (
+              <div className="mt-6">
+                <CarouselControls
+                  page={carousel.page}
+                  maxPage={carousel.maxPage}
+                  hasPrev={carousel.hasPrev}
+                  hasNext={carousel.hasNext}
+                  onPrev={carousel.prev}
+                  onNext={carousel.next}
+                  onGoTo={carousel.goTo}
+                />
+              </div>
+            )}
+          </div>
         </div>
 
-        {/* Mobile carousel — all cards in DOM for consistent height */}
+        {/* Mobile carousel */}
         <div className="md:hidden">
-          <div className="overflow-hidden">
+          <h2 className="mb-2 text-2xl font-bold text-brand-white">
+            {title}
+          </h2>
+          <p className="mb-6 text-sm leading-relaxed text-brand-white/60">
+            {description}
+          </p>
+          <div
+            className="overflow-hidden"
+            onPointerDown={mobileDrag.onPointerDown}
+            onPointerMove={mobileDrag.onPointerMove}
+            onPointerUp={mobileDrag.onPointerUp}
+            onClickCapture={mobileDrag.onClickCapture}
+            style={{ touchAction: "pan-y", cursor: "grab" }}
+          >
             <div
-              className="flex transition-transform duration-300 ease-in-out"
-              style={{ transform: `translateX(-${mobileCarousel.page * 100}%)` }}
+              className={`flex ${mobileDrag.isSwiping ? "" : "transition-transform duration-300 ease-in-out"}`}
+              style={{ transform: `translateX(calc(-${mobileCarousel.page * 100}% + ${mobileDrag.dragOffset}px))` }}
             >
               {events.map((event) => (
-                <div key={event.id} className="w-full flex-shrink-0">
+                <div key={event.id} className="w-full flex-shrink-0 px-2">
                   <EventCard event={event} locale={locale} />
                 </div>
               ))}
@@ -355,7 +476,7 @@ function CarouselControls({
   }
 
   return (
-    <div className="mt-6 flex items-center justify-between">
+    <div className="mx-2 flex items-center justify-between">
       {/* Dots */}
       <div className="flex items-center gap-1.5">
         {Array.from({ length: windowEnd - windowStart }, (_, idx) => {
@@ -523,6 +644,7 @@ export default function EventsContent({
         {regularEvents.length > 0 && (
           <EventSection
             title={t("regular_title")}
+            description={t("regular_description")}
             events={regularEvents}
             locale={locale}
           />
@@ -531,10 +653,31 @@ export default function EventsContent({
         {specialEvents.length > 0 && (
           <EventSection
             title={t("special_title")}
+            description={t("special_description")}
             events={specialEvents}
             locale={locale}
           />
         )}
+
+        {/* Powered by Ludoya */}
+        <div className="-mt-8 flex justify-end md:-mt-12">
+          <a
+            href="https://app.ludoya.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2.5 opacity-50 transition-opacity hover:opacity-80"
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/logos/logo_ludoya.svg"
+              alt=""
+              className="h-7 w-7"
+            />
+            <span className="text-sm font-bold tracking-wider text-stone-custom/80 italic">
+              POWERED <span className="text-xs font-semibold">BY</span> LUDOYA
+            </span>
+          </a>
+        </div>
       </div>
     </section>
   );
