@@ -135,9 +135,9 @@ function useDrag(page: number, maxPage: number, onNext: () => void, onPrev: () =
 // ProgressiveEventImage
 // ---------------------------------------------------------------------------
 
-const EVENT_IMAGE_SIZES = "(max-width: 768px) 80vw, 40vw";
+const EVENT_IMAGE_SIZES = "(max-width: 768px) 85vw, 320px";
 
-function ProgressiveEventImage({ event }: { event: LudoyaEvent }) {
+function ProgressiveEventImage({ event, priority = false }: { event: LudoyaEvent; priority?: boolean }) {
   const [hiLoaded, setHiLoaded] = useState(false);
   const [hiVisible, setHiVisible] = useState(false);
   const hasHiRes = !!event.imageUrl && event.imageUrl !== event.thumbnailUrl;
@@ -154,6 +154,7 @@ function ProgressiveEventImage({ event }: { event: LudoyaEvent }) {
           quality={60}
           className="object-cover"
           sizes={EVENT_IMAGE_SIZES}
+          priority={priority}
         />
       )}
       {/* High-res image — fades in over the thumbnail, then hides it */}
@@ -169,6 +170,7 @@ function ProgressiveEventImage({ event }: { event: LudoyaEvent }) {
           sizes={EVENT_IMAGE_SIZES}
           onLoad={() => setHiLoaded(true)}
           onTransitionEnd={() => { if (hiLoaded) setHiVisible(true); }}
+          priority={priority}
         />
       )}
     </>
@@ -182,9 +184,11 @@ function ProgressiveEventImage({ event }: { event: LudoyaEvent }) {
 function EventCard({
   event,
   locale,
+  priority = false,
 }: {
   event: LudoyaEvent;
   locale: string;
+  priority?: boolean;
 }) {
   const t = useTranslations("events");
   const tz = event.timeZone;
@@ -200,7 +204,7 @@ function EventCard({
         rel="noopener noreferrer"
         className="relative block aspect-square w-full bg-stone-200">
         {event.thumbnailUrl || event.imageUrl ? (
-          <ProgressiveEventImage event={event} />
+          <ProgressiveEventImage event={event} priority={priority} />
         ) : (
           <div className="flex h-full items-center justify-center bg-stone-300">
             <span className="text-4xl opacity-30">🎲</span>
@@ -260,11 +264,13 @@ function EventSection({
   description,
   events,
   locale,
+  prioritizeImages = false,
 }: {
   title: string;
   description: string;
   events: LudoyaEvent[];
   locale: string;
+  prioritizeImages?: boolean;
 }) {
   const carousel = useCarousel(events.length, 2);
   const mobileCarousel = useCarousel(events.length, 1);
@@ -337,7 +343,7 @@ function EventSection({
                   >
                     {events.slice(pageIdx * 2, pageIdx * 2 + 2).map((event) => (
                       <div key={event.id} className="w-1/2 px-3">
-                        <EventCard event={event} locale={locale} />
+                        <EventCard event={event} locale={locale} priority={prioritizeImages && pageIdx === 0} />
                       </div>
                     ))}
                   </div>
@@ -381,9 +387,9 @@ function EventSection({
               className={`flex ${mobileDrag.isSwiping ? "" : "transition-transform duration-300 ease-in-out"}`}
               style={{ transform: `translateX(calc(-${mobileCarousel.page * 100}% + ${mobileDrag.dragOffset}px))` }}
             >
-              {events.map((event) => (
+              {events.map((event, i) => (
                 <div key={event.id} className="w-full shrink-0 px-2">
-                  <EventCard event={event} locale={locale} />
+                  <EventCard event={event} locale={locale} priority={prioritizeImages && i === 0} />
                 </div>
               ))}
             </div>
@@ -459,15 +465,19 @@ function CarouselControls({
             <button
               key={i}
               onClick={() => onGoTo(i)}
-              className={`rounded-full transition-all duration-300 ${
-                isActive
-                  ? "h-2 w-5 bg-brand-orange"
-                  : isEdge
-                    ? "h-1.5 w-1.5 bg-brand-white/20"
-                    : "h-2 w-2 bg-brand-white/30 hover:bg-brand-white/50"
-              }`}
+              className="group/dot flex min-h-6 min-w-6 items-center justify-center"
               aria-label={`${t("carousel_page")} ${i + 1}`}
-            />
+            >
+              <span
+                className={`block rounded-full transition-all duration-300 ${
+                  isActive
+                    ? "h-2 w-5 bg-brand-orange"
+                    : isEdge
+                      ? "h-1.5 w-1.5 bg-brand-white/20"
+                      : "h-2 w-2 bg-brand-white/30 group-hover/dot:bg-brand-white/50"
+                }`}
+              />
+            </button>
           );
         })}
       </div>
@@ -614,6 +624,7 @@ export default function EventsContent({
             description={t("regular_description")}
             events={regularEvents}
             locale={locale}
+            prioritizeImages
           />
         )}
 
@@ -623,6 +634,7 @@ export default function EventsContent({
             description={t("special_description")}
             events={specialEvents}
             locale={locale}
+            prioritizeImages={regularEvents.length === 0}
           />
         )}
 
@@ -632,15 +644,15 @@ export default function EventsContent({
             href="https://app.ludoya.com/"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2.5 opacity-50 transition-opacity hover:opacity-80"
+            className="group flex items-center gap-2.5"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/images/logos/logo_ludoya.svg"
               alt=""
-              className="h-7 w-7"
+              className="h-7 w-7 opacity-50 transition-opacity group-hover:opacity-70"
             />
-            <span className="text-sm font-bold tracking-wider text-stone-custom/80 italic">
+            <span className="text-sm font-bold tracking-wider text-stone-custom/70 italic transition-colors group-hover:text-stone-custom/90">
               POWERED <span className="text-xs font-semibold">BY</span> LUDOYA
             </span>
           </a>
