@@ -2,19 +2,19 @@ import { ImageResponse } from "next/og";
 
 const OG_STRINGS: Record<string, { alt: string; subtitle: string; friday: string; saturday: string }> = {
   ca: {
-    alt: "Darkstone Catalunya — Associacio de jocs de taula i rol",
+    alt: "Darkstone Catalunya — Jocs de taula i rol a Terrassa",
     subtitle: "Associacio de jocs de taula i rol · Terrassa",
     friday: "Divendres 16–20:30h",
     saturday: "Dissabtes 10–13:30h",
   },
   es: {
-    alt: "Darkstone Catalunya — Asociacion de juegos de mesa y rol",
+    alt: "Darkstone Catalunya — Juegos de mesa y rol en Terrassa",
     subtitle: "Asociacion de juegos de mesa y rol · Terrassa",
     friday: "Viernes 16–20:30h",
     saturday: "Sabados 10–13:30h",
   },
   en: {
-    alt: "Darkstone Catalunya — Board games & RPG association",
+    alt: "Darkstone Catalunya — Board games & RPG in Terrassa",
     subtitle: "Board games & RPG association · Terrassa",
     friday: "Fridays 4–8:30 PM",
     saturday: "Saturdays 10 AM–1:30 PM",

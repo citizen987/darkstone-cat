@@ -54,17 +54,15 @@ export default function Hero() {
           className="w-full font-extrabold tracking-tight text-[clamp(2rem,6vw,8rem)] leading-none animate-hero-text-spring [animation-delay:0.2s] [--spring-y:30px] [--spring-r:0deg]"
         >
           Darkstone Catalunya
+          <span className="mt-6 block text-[clamp(1rem,2.5vw,2rem)] font-light tracking-normal opacity-65">
+            {t("tagline")}
+          </span>
         </m.h1>
 
         <m.div
           style={{ opacity: opacityText, y: yText }}
           className="flex flex-col items-center"
         >
-          <p
-            className="mt-6 max-w-2xl text-xl font-light opacity-65 md:text-2xl origin-bottom animate-hero-text-spring [animation-delay:0.4s] [--spring-y:50px] [--spring-r:-6deg]"
-          >
-            {t("tagline")}
-          </p>
 
           <p
             className="mt-4 max-w-lg opacity-65 origin-bottom animate-hero-text-spring [animation-delay:0.55s] [--spring-y:50px] [--spring-r:-3deg]"

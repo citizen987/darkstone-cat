@@ -11,7 +11,7 @@
     "events": "Eventos"
   },
   "hero": {
-    "tagline": "Asociación de Juegos de Mesa y Rol",
+    "tagline": "Juegos de Mesa y Rol en Terrassa",
     "description": "Un espacio para compartir afición, jugar y promover el catalán a través del juego.",
     "cta": "Hazte socio"
   },
@@ -329,14 +329,14 @@
     "expansions_title": "Expansiones en la colección"
   },
   "metadata": {
-    "home_title": "Darkstone Catalunya — Asociación de juegos de mesa y rol",
+    "home_title": "Darkstone Catalunya — Juegos de mesa y rol en Terrassa",
     "home_description": "Asociación sin ánimo de lucro dedicada a los juegos de mesa y juegos de rol en Terrassa. ¡Ven a jugar cada viernes y sábado! Más de 100 juegos disponibles.",
-    "home_og_title": "Darkstone Catalunya",
+    "home_og_title": "Darkstone Catalunya — Juegos de mesa y rol en Terrassa",
     "home_og_description": "Asociación de juegos de mesa y rol en Terrassa. Un espacio para compartir la afición, jugar y fomentar la lengua catalana.",
     "about_title": "Quiénes somos — Asociación de juegos de mesa y rol en Terrassa",
     "about_description": "Conoce la Asociación Darkstone Catalunya: nuestro origen, misión, valores y la junta directiva. Asociación de juegos de mesa y rol fundada en Terrassa en 2024.",
     "contact_title": "Contacto — Juegos de mesa en Terrassa",
-    "contact_description": "Contacta con la Asociación Darkstone Catalunya. Escríbenos para cualquier duda, sugerencia o información sobre nuestras sesiones de juegos de mesa y rol.",
+    "contact_description": "Contacta con la Asociación Darkstone Catalunya. Escríbenos para cualquier duda, sugerencia o información sobre nuestras sesiones de juegos de mesa y rol en Terrassa.",
     "conduct_title": "Código de conducta",
     "conduct_description": "Código de conducta de la Asociación Darkstone Catalunya. Espacio seguro, comunicación respetuosa, inclusión y colaboración para disfrutar de los juegos de mesa.",
     "legal_title": "Aviso legal",
@@ -345,13 +345,13 @@
     "privacy_description": "Política de privacidad de la Asociación Darkstone Catalunya. Información sobre el tratamiento de datos personales, derechos de los usuarios y medidas de seguridad.",
     "cookies_title": "Política de cookies",
     "cookies_description": "Política de cookies de la Asociación Darkstone Catalunya. Información sobre las cookies utilizadas en este sitio web, finalidades y gestión de preferencias.",
-    "ludoteca_title": "Ludoteca — Catálogo de juegos de mesa",
-    "ludoteca_description": "Descubre la colección de juegos de mesa de Darkstone Catalunya. Más de 100 juegos disponibles para jugar en nuestras sesiones de viernes y sábado.",
+    "ludoteca_title": "Ludoteca — Juegos de mesa y rol en Terrassa",
+    "ludoteca_description": "Descubre la colección de juegos de mesa de Darkstone Catalunya en Terrassa. Más de 100 juegos disponibles para jugar en nuestras sesiones de viernes y sábado.",
     "event_friday_name": "Puertas abiertas (viernes)",
     "event_saturday_name": "Puertas abiertas (sábado)",
     "faq_title": "Preguntas frecuentes — Juegos de mesa en Terrassa",
-    "faq_description": "Respuestas a las preguntas más habituales sobre la Asociación Darkstone Catalunya: horarios, precios, cómo hacerse socio, juegos disponibles y más.",
-    "events_title": "Próximos Eventos — Darkstone Catalunya",
+    "faq_description": "Preguntas frecuentes sobre juegos de mesa y rol en Terrassa. Horarios, precios, cómo hacerse socio de Darkstone Catalunya, juegos disponibles y más.",
+    "events_title": "Eventos de juegos de mesa y rol en Terrassa",
     "events_description": "Consulta los próximos eventos y partidas de juegos de mesa de Darkstone Catalunya en Terrassa."
   },
   "not_found": {

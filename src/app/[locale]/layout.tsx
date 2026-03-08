@@ -105,7 +105,7 @@ export default async function LocaleLayout({
         "@id": orgId,
         additionalType: "https://schema.org/NGO",
         name: "Darkstone Catalunya",
-        alternateName: "Associació de jugadors i jugadores de jocs de taula i rol Darkstone Catalunya",
+        alternateName: "Associació de jocs de taula i rol a Terrassa — Darkstone Catalunya",
         url: "https://www.darkstone.cat",
         logo: "https://www.darkstone.cat/images/darkstone_logo_768px.webp",
         image: "https://www.darkstone.cat/images/darkstone_logo_768px.webp",
