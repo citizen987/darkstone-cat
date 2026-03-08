@@ -56,6 +56,9 @@ export async function generateMetadata({
   };
 }
 
+// Computed at module level (outside render) — refreshed on each ISR revalidation
+const EVENT_END_DATE = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
+
 export default async function LocaleLayout({
   children,
   params
@@ -165,6 +168,7 @@ export default async function LocaleLayout({
         name: `Darkstone Catalunya — ${t("event_friday_name")}`,
         description: t("home_description"),
         startDate: "2024-09-14",
+        endDate: EVENT_END_DATE,
         eventSchedule: {
           "@type": "Schedule",
           repeatFrequency: "P1W",
@@ -174,13 +178,19 @@ export default async function LocaleLayout({
         },
         location: { "@id": placeId },
         organizer: { "@id": orgId },
+        performer: { "@id": orgId },
+        eventStatus: "https://schema.org/EventScheduled",
         eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+        image: "https://www.darkstone.cat/images/darkstone_logo_768px.webp",
+        url: "https://www.darkstone.cat/events",
         isAccessibleForFree: true,
         offers: {
           "@type": "Offer",
           price: "0",
           priceCurrency: "EUR",
           availability: "https://schema.org/InStock",
+          validFrom: "2024-09-14",
+          url: "https://www.darkstone.cat/events",
         },
       },
       {
@@ -188,6 +198,7 @@ export default async function LocaleLayout({
         name: `Darkstone Catalunya — ${t("event_saturday_name")}`,
         description: t("home_description"),
         startDate: "2024-09-14",
+        endDate: EVENT_END_DATE,
         eventSchedule: {
           "@type": "Schedule",
           repeatFrequency: "P1W",
@@ -197,13 +208,19 @@ export default async function LocaleLayout({
         },
         location: { "@id": placeId },
         organizer: { "@id": orgId },
+        performer: { "@id": orgId },
+        eventStatus: "https://schema.org/EventScheduled",
         eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+        image: "https://www.darkstone.cat/images/darkstone_logo_768px.webp",
+        url: "https://www.darkstone.cat/events",
         isAccessibleForFree: true,
         offers: {
           "@type": "Offer",
           price: "0",
           priceCurrency: "EUR",
           availability: "https://schema.org/InStock",
+          validFrom: "2024-09-14",
+          url: "https://www.darkstone.cat/events",
         },
       },
     ],
