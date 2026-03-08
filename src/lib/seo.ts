@@ -1,5 +1,11 @@
 const BASE_URL = "https://www.darkstone.cat";
 
+export function getOgImageUrl(locale: string) {
+  return locale === "ca"
+    ? `${BASE_URL}/opengraph-image/og`
+    : `${BASE_URL}/${locale}/opengraph-image/og`;
+}
+
 export function getAlternates(locale: string, path: string) {
   return {
     canonical:

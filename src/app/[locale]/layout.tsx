@@ -5,6 +5,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
+import { getOgImageUrl } from '@/lib/seo';
 import '@/styles/globals.css';
 import SmoothScroll from "@/components/SmoothScroll";
 import CookieConsentProvider from "@/components/CookieConsentProvider";
@@ -36,14 +37,7 @@ export async function generateMetadata({
     openGraph: {
       siteName: "Darkstone Catalunya",
       type: "website",
-      images: [{
-        url: locale === "ca"
-          ? "https://www.darkstone.cat/opengraph-image/og"
-          : `https://www.darkstone.cat/${locale}/opengraph-image/og`,
-        width: 1200,
-        height: 630,
-        type: "image/png",
-      }],
+      images: [{ url: getOgImageUrl(locale), width: 1200, height: 630, type: "image/png" }],
     },
     twitter: {
       card: "summary_large_image",

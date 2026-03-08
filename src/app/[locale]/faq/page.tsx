@@ -1,6 +1,6 @@
 import { type Metadata } from "next";
 import { getTranslations } from "next-intl/server";
-import { getAlternates, getBreadcrumbJsonLd, getWebPageJsonLd } from "@/lib/seo";
+import { getAlternates, getOgImageUrl, getBreadcrumbJsonLd, getWebPageJsonLd } from "@/lib/seo";
 import NavBar from "@/components/NavBar";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -38,7 +38,7 @@ export async function generateMetadata({
       title: t("faq_title"),
       description: t("faq_description"),
       url: alternates.canonical,
-      images: [{ url: `${alternates.canonical}/opengraph-image`, width: 1200, height: 630, alt: t("faq_title") }],
+      images: [{ url: getOgImageUrl(locale), width: 1200, height: 630, alt: t("faq_title") }],
     },
     twitter: {
       card: "summary_large_image",

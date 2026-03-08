@@ -1,6 +1,6 @@
 import { type Metadata } from "next";
 import { getTranslations } from "next-intl/server";
-import { getAlternates, getBreadcrumbJsonLd, getWebPageJsonLd } from "@/lib/seo";
+import { getAlternates, getOgImageUrl, getBreadcrumbJsonLd, getWebPageJsonLd } from "@/lib/seo";
 import { fetchUpcomingEvents } from "@/lib/ludoya";
 import NavBar from "@/components/NavBar";
 import Footer from "@/components/Footer";
@@ -27,7 +27,7 @@ export async function generateMetadata({
       title: t("events_title"),
       description: t("events_description"),
       url: alternates.canonical,
-      images: [{ url: `${alternates.canonical}/opengraph-image`, width: 1200, height: 630, alt: t("events_title") }],
+      images: [{ url: getOgImageUrl(locale), width: 1200, height: 630, alt: t("events_title") }],
     },
     twitter: {
       card: "summary_large_image",

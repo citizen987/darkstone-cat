@@ -1,6 +1,6 @@
 import { type Metadata } from "next";
 import { getTranslations } from "next-intl/server";
-import { getAlternates, getBreadcrumbJsonLd, getWebPageJsonLd } from "@/lib/seo";
+import { getAlternates, getOgImageUrl, getBreadcrumbJsonLd, getWebPageJsonLd } from "@/lib/seo";
 import NavBar from "@/components/NavBar";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -25,14 +25,7 @@ export async function generateMetadata({
       title: t("legal_title"),
       description: t("legal_description"),
       url: alternates.canonical,
-      images: [{
-        url: locale === "ca"
-          ? "https://www.darkstone.cat/opengraph-image/og"
-          : `https://www.darkstone.cat/${locale}/opengraph-image/og`,
-        width: 1200,
-        height: 630,
-        type: "image/png",
-      }],
+      images: [{ url: getOgImageUrl(locale), width: 1200, height: 630, type: "image/png" }],
     },
     twitter: {
       card: "summary_large_image",

@@ -1,6 +1,6 @@
 import { type Metadata } from "next";
 import { getTranslations } from "next-intl/server";
-import { getAlternates } from "@/lib/seo";
+import { getAlternates, getOgImageUrl } from "@/lib/seo";
 import NavBar from "@/components/NavBar";
 import ScrollProgress from "@/components/ScrollProgress";
 import Footer from "@/components/Footer";
@@ -41,14 +41,7 @@ export async function generateMetadata({
       siteName: "Darkstone Catalunya",
       locale: localeToOg[locale] ?? "ca_ES",
       type: "website",
-      images: [{
-        url: locale === "ca"
-          ? "https://www.darkstone.cat/opengraph-image/og"
-          : `https://www.darkstone.cat/${locale}/opengraph-image/og`,
-        width: 1200,
-        height: 630,
-        type: "image/png",
-      }],
+      images: [{ url: getOgImageUrl(locale), width: 1200, height: 630, type: "image/png" }],
     },
     twitter: {
       card: "summary_large_image",
