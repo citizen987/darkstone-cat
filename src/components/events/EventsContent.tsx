@@ -3,45 +3,13 @@
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { motion } from "motion/react";
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { MdChevronLeft, MdChevronRight, MdOpenInNew } from "react-icons/md";
 import type { LudoyaEvent } from "@/lib/ludoya";
 
 // ---------------------------------------------------------------------------
 // Date formatting helpers
 // ---------------------------------------------------------------------------
-
-function formatDateBadge(startsAt: string, timeZone: string, locale: string): {
-  dayAbbr: string;
-  date: string;
-  time: string;
-} {
-  const d = new Date(startsAt);
-  const dayAbbr = new Intl.DateTimeFormat(locale, {
-    weekday: "short",
-    timeZone,
-  }).format(d);
-  const day = new Intl.DateTimeFormat(locale, {
-    day: "numeric",
-    timeZone,
-  }).format(d);
-  const month = new Intl.DateTimeFormat(locale, {
-    month: "2-digit",
-    timeZone,
-  }).format(d);
-  const time = new Intl.DateTimeFormat(locale, {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-    timeZone,
-  }).format(d);
-
-  return {
-    dayAbbr: dayAbbr.replace(".", ""),
-    date: `${day}.${month}`,
-    time,
-  };
-}
 
 function formatTimeRange(startsAt: string, endsAt: string, timeZone: string): string {
   const fmt = (iso: string) =>
@@ -107,9 +75,9 @@ function useDrag(page: number, maxPage: number, onNext: () => void, onPrev: () =
   const [isSwiping, setIsSwiping] = useState(false);
 
   const pageRef = useRef(page);
-  pageRef.current = page;
+  useEffect(() => { pageRef.current = page; }, [page]);
   const maxPageRef = useRef(maxPage);
-  maxPageRef.current = maxPage;
+  useEffect(() => { maxPageRef.current = maxPage; }, [maxPage]);
 
   const DRAG_START_THRESHOLD = 8; // px before drag activates
 
@@ -220,7 +188,6 @@ function EventCard({
 }) {
   const t = useTranslations("events");
   const tz = event.timeZone;
-  const badge = formatDateBadge(event.startsAt, tz, locale);
   const timeRange = formatTimeRange(event.startsAt, event.endsAt, tz);
   const fullDate = formatFullDate(event.startsAt, tz, locale);
 
@@ -252,7 +219,7 @@ function EventCard({
         </p>
 
         {/* Game pills */}
-        <div className="flex h-[4.5rem] flex-wrap content-start gap-1.5 overflow-hidden">
+        <div className="flex h-18 flex-wrap content-start gap-1.5 overflow-hidden">
           {event.plannedPlays.slice(0, 12).map((pp, i) => (
             <span
               key={i}
@@ -341,7 +308,7 @@ function EventSection({
 
         {/* Desktop (md+) — left: title+description, right: carousel + controls */}
         <div className="relative hidden md:flex md:gap-8">
-          <div className="flex w-1/3 flex-shrink-0 flex-col">
+          <div className="flex w-1/3 shrink-0 flex-col">
             <h2 className="text-2xl font-bold text-brand-white sm:text-3xl">
               {title}
             </h2>
@@ -366,7 +333,7 @@ function EventSection({
                 {Array.from({ length: carousel.maxPage + 1 }, (_, pageIdx) => (
                   <div
                     key={pageIdx}
-                    className="flex w-full flex-shrink-0"
+                    className="flex w-full shrink-0"
                   >
                     {events.slice(pageIdx * 2, pageIdx * 2 + 2).map((event) => (
                       <div key={event.id} className="w-1/2 px-3">
@@ -415,7 +382,7 @@ function EventSection({
               style={{ transform: `translateX(calc(-${mobileCarousel.page * 100}% + ${mobileDrag.dragOffset}px))` }}
             >
               {events.map((event) => (
-                <div key={event.id} className="w-full flex-shrink-0 px-2">
+                <div key={event.id} className="w-full shrink-0 px-2">
                   <EventCard event={event} locale={locale} />
                 </div>
               ))}
