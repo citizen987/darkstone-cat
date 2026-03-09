@@ -58,6 +58,7 @@ const nextConfig: NextConfig = {
     NEXT_PUBLIC_BUILD_VERSION: gitSha.slice(0, 7),
     NEXT_PUBLIC_BUILD_DATE: buildDate,
   },
+  serverExternalPackages: ["@napi-rs/canvas"],
   experimental: {
     optimizePackageImports: ["react-icons"],
   },

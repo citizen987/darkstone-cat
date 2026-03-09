@@ -398,6 +398,147 @@ function enrichWithThingData(
 // Public API
 // ---------------------------------------------------------------------------
 
+// ---------------------------------------------------------------------------
+// BGG Search & Thing lookup (used by game-matching for external games)
+// ---------------------------------------------------------------------------
+
+export interface BggSearchResult {
+  id: string;
+  name: string;
+  year: number;
+}
+
+export interface BggThingBasic {
+  id: string;
+  name: string;
+  image: string;
+  thumbnail: string;
+  weight: number;
+  categories: string[];
+  /** BGG item type: "boardgame", "rpgitem", "boardgameaccessory", etc. */
+  thingType: string;
+}
+
+/**
+ * Search BGG for games matching a query string.
+ * Returns up to `limit` results sorted by BGG relevance.
+ * Requires BGG_API_KEY. Returns empty array on error or missing key.
+ */
+export async function searchBggGames(
+  query: string,
+  limit = 5
+): Promise<BggSearchResult[]> {
+  if (!process.env.BGG_API_KEY) return [];
+
+  try {
+    const encoded = encodeURIComponent(query);
+    const url = `${BGG_BASE}/search?query=${encoded}&type=boardgame,rpgitem,boardgameaccessory&exact=0`;
+    const xml = await fetchBggXml(url);
+    const parsed = parser.parse(xml);
+    const items = parsed?.items?.item;
+    if (!items) return [];
+
+    const list = Array.isArray(items) ? items : [items];
+    return list.slice(0, limit).map((item) => {
+      const nameNode = item.name;
+      // Search results can return name as object with @_value or as array
+      let name = "";
+      if (Array.isArray(nameNode)) {
+        const primary = nameNode.find(
+          (n: Record<string, string>) => n["@_type"] === "primary"
+        );
+        name = primary?.["@_value"] ?? nameNode[0]?.["@_value"] ?? "";
+      } else if (typeof nameNode === "object" && nameNode !== null) {
+        name = nameNode["@_value"] ?? "";
+      } else if (typeof nameNode === "string") {
+        name = nameNode;
+      }
+
+      return {
+        id: item["@_id"] as string,
+        name,
+        year: parseInt(item.yearpublished?.["@_value"] ?? "0", 10) || 0,
+      };
+    });
+  } catch (err) {
+    console.warn("[BGG] Search failed for:", query, err);
+    return [];
+  }
+}
+
+/**
+ * Fetch basic thing data (image, weight, categories) for a list of BGG IDs.
+ * Used to enrich games found via search that aren't in the club collection.
+ * Requires BGG_API_KEY. Returns empty map on error or missing key.
+ */
+export async function fetchBggThings(
+  ids: string[]
+): Promise<Map<string, BggThingBasic>> {
+  const result = new Map<string, BggThingBasic>();
+  if (!process.env.BGG_API_KEY || ids.length === 0) return result;
+
+  try {
+    // Batch in groups of BATCH_SIZE
+    for (let i = 0; i < ids.length; i += BATCH_SIZE) {
+      const batch = ids.slice(i, i + BATCH_SIZE);
+      const url = `${BGG_BASE}/thing?id=${batch.join(",")}&stats=1`;
+      const xml = await fetchBggXml(url);
+      const parsed = parser.parse(xml);
+      const items = parsed?.items?.item;
+      if (!items) continue;
+
+      const list = Array.isArray(items) ? items : [items];
+      for (const item of list) {
+        const id = item["@_id"] as string;
+        const weight =
+          parseFloat(
+            item?.statistics?.ratings?.averageweight?.["@_value"] ?? "0"
+          ) || 0;
+
+        // Extract primary name
+        let name = "";
+        const nameNode = item.name;
+        if (Array.isArray(nameNode)) {
+          const primary = nameNode.find(
+            (n: Record<string, string>) => n["@_type"] === "primary"
+          );
+          name = primary?.["@_value"] ?? nameNode[0]?.["@_value"] ?? "";
+        } else if (typeof nameNode === "object" && nameNode !== null) {
+          name = nameNode["@_value"] ?? "";
+        }
+
+        const categories: string[] = [];
+        const links = item?.link;
+        if (Array.isArray(links)) {
+          for (const link of links) {
+            if (
+              (link["@_type"] === "boardgamecategory" ||
+                link["@_type"] === "rpgcategory") &&
+              link["@_value"]
+            ) {
+              categories.push(link["@_value"]);
+            }
+          }
+        }
+
+        result.set(id, {
+          id,
+          name,
+          image: item.image ?? "",
+          thumbnail: item.thumbnail ?? "",
+          weight: Math.round(weight * 10) / 10,
+          categories,
+          thingType: (item["@_type"] as string) ?? "boardgame",
+        });
+      }
+    }
+  } catch (err) {
+    console.warn("[BGG] Thing fetch failed for IDs:", ids, err);
+  }
+
+  return result;
+}
+
 export async function fetchBggCollectionCount(): Promise<number> {
   const hasToken = !!process.env.BGG_API_KEY;
   const username = process.env.BGG_USERNAME!;

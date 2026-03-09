@@ -352,7 +352,9 @@
     "faq_title": "Preguntes freqüents — Jocs de taula a Terrassa",
     "faq_description": "Preguntes freqüents sobre jocs de taula i rol a Terrassa. Horaris, preus, com fer-se soci de Darkstone Catalunya, jocs disponibles i més.",
     "events_title": "Esdeveniments de jocs de taula i rol a Terrassa",
-    "events_description": "Consulta els pròxims esdeveniments i partides de jocs de taula de Darkstone Catalunya a Terrassa."
+    "events_description": "Consulta els pròxims esdeveniments i partides de jocs de taula de Darkstone Catalunya a Terrassa.",
+    "event_images_title": "Imatges d'esdeveniments — Darkstone Catalunya",
+    "event_images_description": "Genera i descarrega imatges per als esdeveniments de Darkstone Catalunya."
   },
   "not_found": {
     "title": "Pàgina no trobada",
@@ -507,5 +509,19 @@
     "rpg_a": "Sí! Organitzem partides de jocs de rol regularment. Si vols dirigir o jugar una partida, parla amb nosaltres i coordinarem horaris i taules.",
     "join_q": "Com puc fer-me soci?",
     "join_a": "Vine a qualsevol sessió i parla amb nosaltres, o contacta'ns a través del formulari de contacte de la web. El procés és ràpid i senzill: només cal omplir un formulari d'inscripció. És gratuït!"
+  },
+  "event_images": {
+    "title": "Imatges d'esdeveniments",
+    "subtitle": "Genera i descarrega imatges per compartir als esdeveniments.",
+    "regular_title": "Sessions regulars",
+    "special_title": "Esdeveniments especials",
+    "view_image": "Veure imatge",
+    "download": "Descarregar",
+    "no_games": "Cap joc programat",
+    "generating": "Generant imatge…",
+    "games_count": "{count, plural, one {# joc programat} other {# jocs programats}}",
+    "no_events": "No hi ha esdeveniments futurs disponibles.",
+    "error_generating": "Error generant la imatge",
+    "close": "Tancar"
   }
 }

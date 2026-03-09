@@ -9,6 +9,7 @@ const pages = [
   { path: "/ludoteca", changeFrequency: "monthly" as const, priority: 0.8, lastModified: "2026-03-04" },
   { path: "/contact", changeFrequency: "yearly" as const, priority: 0.7, lastModified: "2026-03-04" },
   { path: "/events", changeFrequency: "weekly" as const, priority: 0.8, lastModified: "2026-03-06" },
+  { path: "/events/images", changeFrequency: "weekly" as const, priority: 0.3, lastModified: "2026-03-09" },
   { path: "/faq", changeFrequency: "yearly" as const, priority: 0.6, lastModified: "2026-03-06" },
   { path: "/conduct", changeFrequency: "yearly" as const, priority: 0.5, lastModified: "2026-03-04" },
   { path: "/legal", changeFrequency: "yearly" as const, priority: 0.3, lastModified: "2026-02-01" },

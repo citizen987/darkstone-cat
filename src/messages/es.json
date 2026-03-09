@@ -352,7 +352,9 @@
     "faq_title": "Preguntas frecuentes — Juegos de mesa en Terrassa",
     "faq_description": "Preguntas frecuentes sobre juegos de mesa y rol en Terrassa. Horarios, precios, cómo hacerse socio de Darkstone Catalunya, juegos disponibles y más.",
     "events_title": "Eventos de juegos de mesa y rol en Terrassa",
-    "events_description": "Consulta los próximos eventos y partidas de juegos de mesa de Darkstone Catalunya en Terrassa."
+    "events_description": "Consulta los próximos eventos y partidas de juegos de mesa de Darkstone Catalunya en Terrassa.",
+    "event_images_title": "Imágenes de eventos — Darkstone Catalunya",
+    "event_images_description": "Genera y descarga imágenes para los eventos de Darkstone Catalunya."
   },
   "not_found": {
     "title": "Página no encontrada",
@@ -507,5 +509,19 @@
     "rpg_a": "¡Sí! Organizamos partidas de juegos de rol regularmente. Si quieres dirigir o jugar una partida, habla con nosotros y coordinaremos horarios y mesas.",
     "join_q": "¿Cómo puedo hacerme socio?",
     "join_a": "Ven a cualquier sesión y habla con nosotros, o contáctanos a través del formulario de contacto de la web. El proceso es rápido y sencillo: solo hay que rellenar un formulario de inscripción. ¡Es gratuito!"
+  },
+  "event_images": {
+    "title": "Imágenes de eventos",
+    "subtitle": "Genera y descarga imágenes para compartir en los eventos.",
+    "regular_title": "Sesiones regulares",
+    "special_title": "Eventos especiales",
+    "view_image": "Ver imagen",
+    "download": "Descargar",
+    "no_games": "Ningún juego programado",
+    "generating": "Generando imagen…",
+    "games_count": "{count, plural, one {# juego programado} other {# juegos programados}}",
+    "no_events": "No hay eventos futuros disponibles.",
+    "error_generating": "Error generando la imagen",
+    "close": "Cerrar"
   }
 }

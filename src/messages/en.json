@@ -352,7 +352,9 @@
     "faq_title": "FAQ — Board games in Terrassa",
     "faq_description": "FAQ about board games & RPG in Terrassa. Schedule, prices, how to join Darkstone Catalunya, available games and more.",
     "events_title": "Board game & RPG events in Terrassa",
-    "events_description": "Check out the upcoming board game events and sessions at Darkstone Catalunya in Terrassa."
+    "events_description": "Check out the upcoming board game events and sessions at Darkstone Catalunya in Terrassa.",
+    "event_images_title": "Event Images — Darkstone Catalunya",
+    "event_images_description": "Generate and download images for Darkstone Catalunya events."
   },
   "not_found": {
     "title": "Page not found",
@@ -507,5 +509,19 @@
     "rpg_a": "Yes! We organise role-playing game sessions regularly. If you want to run or join a game, talk to us and we'll coordinate schedules and tables.",
     "join_q": "How can I become a member?",
     "join_a": "Come to any session and talk to us, or contact us through the contact form on the website. The process is quick and simple: just fill in a registration form. It's free!"
+  },
+  "event_images": {
+    "title": "Event Images",
+    "subtitle": "Generate and download images to share for events.",
+    "regular_title": "Regular Sessions",
+    "special_title": "Special Events",
+    "view_image": "View image",
+    "download": "Download",
+    "no_games": "No games scheduled",
+    "generating": "Generating image…",
+    "games_count": "{count, plural, one {# game scheduled} other {# games scheduled}}",
+    "no_events": "No upcoming events available.",
+    "error_generating": "Error generating image",
+    "close": "Close"
   }
 }
