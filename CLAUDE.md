@@ -189,6 +189,19 @@ HSTS, CSP, X-Frame-Options (SAMEORIGIN), X-Content-Type-Options (nosniff), Refer
 - `src/app/global-error.tsx` — Global fallback
 - Shared `ErrorContent` component with translation keys: `error_page.*`, `not_found.*`
 
+## Supabase
+
+The project uses [Supabase](https://supabase.com) as its backend database. Access is available via the **Supabase MCP server**, which allows:
+
+- Listing tables and schemas
+- Executing SQL queries
+- Applying migrations
+- Managing edge functions
+- Viewing logs
+- Managing branches (preview environments)
+
+The `public` schema is the primary working schema.
+
 ## Environment Variables
 
 | Variable | Description |

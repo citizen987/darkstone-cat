@@ -39,6 +39,7 @@ next-env.d.ts
 .claude
 .agent
 .agents
+.mcp.json
 # skills-lock.json
 
 # Analytics

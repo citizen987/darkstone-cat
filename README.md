@@ -30,6 +30,7 @@
 | XML Parsing | [fast-xml-parser](https://github.com/NaturalIntelligence/fast-xml-parser) |
 | Email | [Resend](https://resend.com) |
 | Icons | [React Icons](https://react-icons.github.io/react-icons/) (Material Design) |
+| Database | [Supabase](https://supabase.com) (PostgreSQL) |
 | Monitoring | [Vercel Analytics](https://vercel.com/analytics) + [Speed Insights](https://vercel.com/docs/speed-insights) |
 | Deployment | [Vercel](https://vercel.com) |
 
