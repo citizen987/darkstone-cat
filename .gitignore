@@ -54,3 +54,6 @@ lighthouse-*
 audits/
 .lighthouse/
 .unlighthouse/
+
+# Sensitive data (member PII)
+/data/
