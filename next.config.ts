@@ -43,7 +43,7 @@ const securityHeaders = [
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: blob: https://cf.geekdo-images.com https://img.ludoya.com https://www.googletagmanager.com",
       "font-src 'self'",
-      "connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://va.vercel-scripts.com https://vitals.vercel-insights.com",
+      "connect-src 'self' https://*.google-analytics.com https://www.googletagmanager.com https://va.vercel-scripts.com https://vitals.vercel-insights.com",
       "frame-src 'self' https://www.google.com",
       "frame-ancestors 'self'",
       "object-src 'none'",
