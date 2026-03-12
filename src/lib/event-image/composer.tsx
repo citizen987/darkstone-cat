@@ -5,7 +5,7 @@
 import { ImageResponse } from "next/og";
 import type { ResolvedGame } from "../game-matching";
 import type { FrameColor } from "../game-matching";
-import { getFont, getImageAssets, loadRemoteImageAsDataUri } from "./assets";
+import { getFont, getImageAssets, loadRemoteImageAsDataUri, type ImageAssets } from "./assets";
 import { formatEventDate, formatEventTime } from "./text";
 import { getLayout } from "./layouts";
 import type { LudoyaEvent } from "../ludoya";
@@ -63,7 +63,7 @@ function getFrameDimensions(frame: FrameColor) {
 
 function getFrameSrc(
   frame: FrameColor,
-  assets: ReturnType<typeof getImageAssets>
+  assets: ImageAssets
 ): string {
   switch (frame) {
     case "green":
@@ -106,13 +106,12 @@ export async function composeEventImage(
   event: LudoyaEvent,
   resolvedGames: ResolvedGame[]
 ): Promise<ImageResponse> {
-  const assets = getImageAssets();
-  const fontData = getFont();
-
-  // Load all game cover images in parallel as base64
-  const gameImages = await Promise.all(
-    resolvedGames.map((g) => loadRemoteImageAsDataUri(g.imageUrl))
-  );
+  // Load local assets, font, and remote game covers in parallel
+  const [assets, fontData, ...gameImages] = await Promise.all([
+    getImageAssets(),
+    getFont(),
+    ...resolvedGames.map((g) => loadRemoteImageAsDataUri(g.imageUrl)),
+  ]) as [Awaited<ReturnType<typeof getImageAssets>>, ArrayBuffer, ...(string | null)[]];
 
   // Date/time text
   const tz = event.timeZone || "Europe/Madrid";
