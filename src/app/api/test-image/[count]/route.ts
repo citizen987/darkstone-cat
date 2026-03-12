@@ -103,8 +103,6 @@ function buildMockEvent(count: number): LudoyaEvent {
 // GET /api/test-image/[count]
 // ---------------------------------------------------------------------------
 
-const NO_CACHE_HEADERS = { "Cache-Control": "no-store" } as const;
-
 export async function GET(
   _request: Request,
   { params }: { params: Promise<{ count: string }> }
@@ -115,28 +113,21 @@ export async function GET(
   if (isNaN(count) || count < 1 || count > 8) {
     return NextResponse.json(
       { error: "count must be between 1 and 8" },
-      { status: 400, headers: NO_CACHE_HEADERS }
+      { status: 400, headers: { "Cache-Control": "no-store" } }
     );
   }
 
   try {
     const mockEvent = buildMockEvent(count);
     const mockGames = MOCK_GAMES.slice(0, count);
-    const pngBuffer = await composeEventImage(mockEvent, mockGames);
-
-    return new Response(pngBuffer as unknown as BodyInit, {
-      status: 200,
-      headers: {
-        "Content-Type": "image/png",
-        "Content-Length": String(pngBuffer.length),
-        ...NO_CACHE_HEADERS,
-      },
-    });
+    const response = await composeEventImage(mockEvent, mockGames);
+    response.headers.set("Cache-Control", "no-store");
+    return response;
   } catch (err) {
     console.error("[TestImage] Generation failed:", err);
     return NextResponse.json(
       { error: "generation_failed" },
-      { status: 500, headers: NO_CACHE_HEADERS }
+      { status: 500, headers: { "Cache-Control": "no-store" } }
     );
   }
 }

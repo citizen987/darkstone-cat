@@ -6,10 +6,6 @@ import { generateEventImage } from "@/lib/event-image/generator";
 // Allow up to 30s for image generation (BGG image fetches can be slow)
 export const maxDuration = 30;
 
-const NO_CACHE_HEADERS = {
-  "Cache-Control": "no-store",
-} as const;
-
 export async function GET(
   _request: Request,
   { params }: { params: Promise<{ eventId: string }> }
@@ -20,7 +16,7 @@ export async function GET(
   if (!eventId || typeof eventId !== "string" || eventId.trim().length === 0) {
     return NextResponse.json(
       { error: "invalid_event_id" },
-      { status: 400, headers: NO_CACHE_HEADERS }
+      { status: 400, headers: { "Cache-Control": "no-store" } }
     );
   }
 
@@ -41,26 +37,19 @@ export async function GET(
     if (!event) {
       return NextResponse.json(
         { error: "event_not_found" },
-        { status: 404, headers: NO_CACHE_HEADERS }
+        { status: 404, headers: { "Cache-Control": "no-store" } }
       );
     }
 
-    // Generate the image
-    const pngBuffer = await generateEventImage(event, bggResult.games);
-
-    return new Response(pngBuffer as unknown as BodyInit, {
-      status: 200,
-      headers: {
-        "Content-Type": "image/png",
-        "Content-Length": String(pngBuffer.length),
-        ...NO_CACHE_HEADERS,
-      },
-    });
+    // Generate the image (returns ImageResponse with PNG body)
+    const response = await generateEventImage(event, bggResult.games);
+    response.headers.set("Cache-Control", "no-store");
+    return response;
   } catch (err) {
     console.error("[EventImage] Generation failed:", err);
     return NextResponse.json(
       { error: "generation_failed" },
-      { status: 500, headers: NO_CACHE_HEADERS }
+      { status: 500, headers: { "Cache-Control": "no-store" } }
     );
   }
 }
