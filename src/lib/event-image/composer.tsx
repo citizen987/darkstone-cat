@@ -106,12 +106,13 @@ export async function composeEventImage(
   event: LudoyaEvent,
   resolvedGames: ResolvedGame[]
 ): Promise<ImageResponse> {
-  // Load local assets, font, and remote game covers in parallel
-  const [assets, fontData, ...gameImages] = await Promise.all([
-    getImageAssets(),
-    getFont(),
-    ...resolvedGames.map((g) => loadRemoteImageAsDataUri(g.imageUrl)),
-  ]) as [Awaited<ReturnType<typeof getImageAssets>>, ArrayBuffer, ...(string | null)[]];
+  const assets = getImageAssets();
+  const fontData = getFont();
+
+  // Load all game cover images in parallel as base64
+  const gameImages = await Promise.all(
+    resolvedGames.map((g) => loadRemoteImageAsDataUri(g.imageUrl))
+  );
 
   // Date/time text
   const tz = event.timeZone || "Europe/Madrid";

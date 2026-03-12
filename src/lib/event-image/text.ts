@@ -24,7 +24,7 @@ export function formatEventDate(
 
   // Get day-of-week in the event timezone
   const dayOfWeek = new Date(
-    date.toLocaleString("en-US", { timeZone })
+    date.toLocaleString("en-US", { timeZone: timeZone })
   ).getDay();
 
   const dayName = CATALAN_DAYS[dayOfWeek];
