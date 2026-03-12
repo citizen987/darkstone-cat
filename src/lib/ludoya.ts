@@ -19,6 +19,8 @@ const REGULAR_SCHEDULES = [
 
 export interface LudoyaPlannedPlay {
   gameName: string;
+  imageUrl: string | null;
+  yearPublished: number;
 }
 
 export interface LudoyaEvent {
@@ -73,7 +75,9 @@ interface RawMeetupsResponse {
 interface RawPlannedPlay {
   game: {
     name: string;
-  };
+    image: RawImage | null;
+    yearPublished: number;
+  } | null;
 }
 
 interface RawPlannedPlaysResponse {
@@ -183,7 +187,9 @@ export async function fetchUpcomingEvents(): Promise<LudoyaEventsResult> {
         event.plannedPlays = playsResults[i].list
           .filter((pp) => pp.game != null)
           .map((pp) => ({
-            gameName: pp.game.name,
+            gameName: pp.game!.name,
+            imageUrl: pp.game!.image?.url ?? null,
+            yearPublished: pp.game!.yearPublished ?? 0,
           }));
       });
     }

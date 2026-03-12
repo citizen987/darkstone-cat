@@ -95,6 +95,8 @@ function buildMockEvent(count: number): LudoyaEvent {
     type: "regular",
     plannedPlays: MOCK_GAMES.slice(0, count).map((g) => ({
       gameName: g.name,
+      imageUrl: null,
+      yearPublished: 0,
     })),
   };
 }

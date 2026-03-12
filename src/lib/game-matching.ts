@@ -221,7 +221,8 @@ function findFuzzyMatch(
 
 function pickBestSearchResult(
   results: BggSearchResult[],
-  normalizedName: string
+  normalizedName: string,
+  yearHint: number
 ): BggSearchResult | null {
   let best: BggSearchResult | null = null;
   let bestScore = 0;
@@ -231,6 +232,15 @@ function pickBestSearchResult(
     if (score > bestScore) {
       bestScore = score;
       best = r;
+    } else if (score === bestScore && score >= FUZZY_THRESHOLD && best) {
+      // Tiebreaker: prefer year match from Ludoya, else prefer newest
+      if (yearHint > 0) {
+        const bestYearDiff = Math.abs(best.year - yearHint);
+        const currYearDiff = Math.abs(r.year - yearHint);
+        if (currYearDiff < bestYearDiff) best = r;
+      } else {
+        if (r.year > best.year) best = r;
+      }
     }
   }
 
@@ -422,16 +432,18 @@ export async function resolveEventGames(
   bggGames: BggGame[]
 ): Promise<ResolvedGame[]> {
   const resolved: ResolvedGame[] = [];
-  const unresolved: { index: number; ludoyaName: string }[] = [];
+  const unresolved: { index: number; play: LudoyaPlannedPlay }[] = [];
 
   // Steps 1–3: try to resolve from the club collection (fast, sync)
   for (let i = 0; i < plannedPlays.length; i++) {
-    const name = plannedPlays[i].gameName;
-    const match = resolveFromCollection(name, bggGames);
+    const play = plannedPlays[i];
+    const match = resolveFromCollection(play.gameName, bggGames);
     if (match) {
+      // Prefer Ludoya image over BGG image when available
+      if (play.imageUrl) match.imageUrl = play.imageUrl;
       resolved.push(match);
     } else {
-      unresolved.push({ index: i, ludoyaName: name });
+      unresolved.push({ index: i, play });
     }
   }
 
@@ -439,19 +451,31 @@ export async function resolveEventGames(
   if (unresolved.length > 0) {
     // Search BGG in parallel for all unresolved games
     const searchResults = await Promise.all(
-      unresolved.map((u) => searchBggGames(u.ludoyaName, 5))
+      unresolved.map((u) => searchBggGames(u.play.gameName, 5))
     );
 
     // Pick best candidate from search results for each game
     const thingIdsToFetch: string[] = [];
-    const candidateMap = new Map<string, string>(); // bggId → ludoyaName
+    // bggId → { ludoyaName, ludoyaImageUrl }
+    const candidateMap = new Map<
+      string,
+      { ludoyaName: string; ludoyaImageUrl: string | null }
+    >();
 
     for (let i = 0; i < unresolved.length; i++) {
-      const normalizedName = normalizeName(unresolved[i].ludoyaName);
-      const best = pickBestSearchResult(searchResults[i], normalizedName);
+      const { play } = unresolved[i];
+      const normalizedName = normalizeName(play.gameName);
+      const best = pickBestSearchResult(
+        searchResults[i],
+        normalizedName,
+        play.yearPublished
+      );
       if (best) {
         thingIdsToFetch.push(best.id);
-        candidateMap.set(best.id, unresolved[i].ludoyaName);
+        candidateMap.set(best.id, {
+          ludoyaName: play.gameName,
+          ludoyaImageUrl: play.imageUrl,
+        });
       }
     }
 
@@ -461,10 +485,13 @@ export async function resolveEventGames(
 
       const candidateEntries = Array.from(candidateMap.entries());
       for (let i = 0; i < candidateEntries.length; i++) {
-        const [bggId, ludoyaName] = candidateEntries[i];
+        const [bggId, { ludoyaName, ludoyaImageUrl }] = candidateEntries[i];
         const thing = thingMap.get(bggId);
-        if (thing && thing.image) {
-          resolved.push(buildFromThingData(ludoyaName, thing));
+        if (thing && (thing.image || ludoyaImageUrl)) {
+          const game = buildFromThingData(ludoyaName, thing);
+          // Prefer Ludoya image over BGG image when available
+          if (ludoyaImageUrl) game.imageUrl = ludoyaImageUrl;
+          resolved.push(game);
         }
       }
     }
