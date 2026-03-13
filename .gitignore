@@ -57,3 +57,6 @@ audits/
 
 # Sensitive data (member PII)
 /data/
+
+# Docs not included by default
+/docs/

@@ -48,6 +48,13 @@
 | `/legal` | Terms & conditions |
 | `/privacy` | Privacy policy |
 | `/cookies` | Cookie policy |
+| `/login` | Login form |
+| `/register` | Registration form |
+| `/forgot-password` | Password recovery |
+| `/reset-password` | Set new password (protected) |
+| `/profile` | Member profile view (protected) |
+| `/profile/edit` | Profile edit form (protected) |
+| `/profile/card` | Member card preview & download (protected) |
 
 All routes are localized under `/[locale]/` (`ca`, `es`, `en`).
 

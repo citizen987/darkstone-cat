@@ -1,0 +1,47 @@
+import { createClient } from "@/lib/supabase/server";
+import { composeMemberCard } from "@/lib/member-card/composer";
+
+export async function GET(request: Request) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return new Response("Unauthorized", { status: 401 });
+  }
+
+  const { data: member } = await supabase
+    .from("members")
+    .select("first_name, last_name, member_number")
+    .eq("id", user.id)
+    .single();
+
+  if (!member) {
+    return new Response("Member not found", { status: 404 });
+  }
+
+  const fullName = `${member.first_name} ${member.last_name}`;
+  const memberNumber = member.member_number;
+
+  const imageResponse = await composeMemberCard(fullName, memberNumber);
+
+  const { searchParams } = new URL(request.url);
+  const isPreview = searchParams.get("preview") === "1";
+
+  const headers = new Headers(imageResponse.headers);
+  headers.set("Cache-Control", "no-store");
+
+  if (!isPreview) {
+    const safeFileName = fullName.replace(/[^a-zA-Z0-9À-ÿ ]/g, "").replace(/\s+/g, "_");
+    headers.set(
+      "Content-Disposition",
+      `attachment; filename="carnet_${safeFileName}.png"`
+    );
+  }
+
+  return new Response(imageResponse.body, {
+    status: 200,
+    headers,
+  });
+}

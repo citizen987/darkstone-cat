@@ -67,8 +67,17 @@ Next.js App Router with `next-intl` v4 for internationalization:
 | `/legal` | `legal/page.tsx` | Terms & conditions (`revalidate = false`) |
 | `/privacy` | `privacy/page.tsx` | Privacy policy (`revalidate = false`) |
 | `/cookies` | `cookies/page.tsx` | Cookie policy (`revalidate = false`) |
+| `/login` | `login/page.tsx` | Login form (`revalidate = false`, `noindex`) |
+| `/register` | `register/page.tsx` | Registration form (`revalidate = false`, `noindex`) |
+| `/forgot-password` | `forgot-password/page.tsx` | Password recovery (`revalidate = false`, `noindex`) |
+| `/reset-password` | `reset-password/page.tsx` | Set new password — protected route (`revalidate = false`, `noindex`) |
+| `/profile` | `profile/page.tsx` | Member profile view — protected route (`revalidate = false`, `noindex`) |
+| `/profile/edit` | `profile/edit/page.tsx` | Profile edit form — protected route (`revalidate = false`, `noindex`) |
+| `/profile/card` | `profile/card/page.tsx` | Member card preview & download — protected route (`revalidate = false`, `noindex`) |
 
 API route: `src/app/api/contact/route.ts` — POST endpoint using Resend to send emails.
+API route: `src/app/api/members/card/route.ts` — GET endpoint for member card image (auth required). `?preview=1` for inline display, without for download.
+Auth callback routes: `src/app/auth/confirm/route.ts` (email confirmation), `src/app/auth/callback/route.ts` (password recovery). These live outside `[locale]` because Supabase sends fixed URLs.
 
 ### Provider Stack (layout.tsx)
 
@@ -125,6 +134,8 @@ All interactive components use `"use client"`. Components are organized by page:
 - `src/components/events/` — Events page (EventsHero, EventsContent)
 - `src/components/faq/` — FAQ page (FaqContent)
 - `src/components/conduct/` — Code of conduct (ConductContent)
+- `src/components/auth/` — Auth pages (AuthHero, LoginForm, RegisterForm, ForgotPasswordForm, ResetPasswordForm)
+- `src/components/profile/` — Profile pages (ProfileView, ProfileEditForm, MemberCard, DeleteAccountDialog)
 - `src/components/legal/` — Legal pages (LegalPageContent, LegalContent, PrivacyContent, CookiesContent)
 - Root-level: NavBar, Footer, SmoothScroll, CookieBanner, CookieConsentProvider, GoogleAnalytics, ScrollProgress, ScrollToTop, TextReveal, LanguageSwitcher, ThemeLink, ErrorContent
 
@@ -143,6 +154,16 @@ Client state in `LudotecaClient.tsx`:
 - Sort: name/rating/weight × asc/desc
 - View: grid/list, pagination (24/48/96/192 per page)
 - URL serialization: query params (`q`, `type`, `rank`, `players`, `duration`, `weight`, `age`, `cat`, `mech`, `sort`, `view`, `pp`, `page`)
+
+### Authentication
+
+- **Supabase Auth** with PKCE flow via `@supabase/ssr`
+- Client-side auth calls (`signUp`, `signInWithPassword`, `resetPasswordForEmail`, `updateUser`) from `@/lib/supabase/client`
+- Server-side helpers in `src/lib/supabase/auth.ts`: `getCurrentUser()`, `getCurrentMember()`, `isAdmin()`
+- Server Action `src/lib/supabase/actions.ts`: `updateMemberAfterSignup()` — encrypts DNI/phone via `@/lib/encryption`
+- Hook `src/hooks/useAuthUser.ts`: reactive `{ user, role, loading }` via `onAuthStateChange`
+- Auth callback routes at `src/app/auth/` (outside `[locale]`): `/auth/confirm` (email — discards session cookies), `/auth/callback` (recovery — keeps session for password reset)
+- Middleware: explicit early return for `/auth/*` paths (prevents `next-intl` interference), PROTECTED_ROUTES require auth, AUTH_ROUTES redirect to `/` when logged in (temporary until `/profile` exists in Phase 3), `/reset-password` is in PROTECTED_ROUTES (not AUTH_ROUTES)
 
 ### Cookie Consent
 
@@ -210,10 +231,11 @@ The `public` schema is the primary working schema.
 | `NEXT_PUBLIC_GA_MEASUREMENT_ID` | Google Analytics 4 measurement ID |
 | `BGG_USERNAME` | BoardGameGeek username for ludoteca collection |
 | `BGG_API_KEY` | BoardGameGeek XML API key |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase service role key (server-only, for admin operations like account deletion) |
 
 ## Translation Key Namespaces
 
-`nav`, `hero`, `about`, `activities`, `schedule`, `join_us`, `location`, `footer`, `about_page`, `ludoteca`, `contact_page`, `events`, `faq`, `cookies`, `conduct`, `legal`, `privacy`, `error_page`, `not_found`, `metadata`
+`nav`, `hero`, `about`, `activities`, `schedule`, `join_us`, `location`, `footer`, `about_page`, `ludoteca`, `contact_page`, `events`, `faq`, `cookies`, `conduct`, `legal`, `privacy`, `error_page`, `not_found`, `metadata`, `auth`, `profile`
 
 ## Path Alias
 
@@ -242,3 +264,7 @@ The `public` schema is the primary working schema.
 8. **BGG mock mode** — Without `BGG_API_KEY`, ludoteca falls back to local XML files in `/public/mock/`.
 9. **Metadata async** — `generateMetadata()` must `await params` to get locale, uses `getTranslations()` from `next-intl/server`.
 10. **Activities dual mode** — Desktop uses scroll-pinned horizontal parallax; mobile uses stacked cards with direction-aware slides. Completely separate implementations.
+11. **`/reset-password` in PROTECTED_ROUTES** — Not in AUTH_ROUTES. User arrives with a session established by `/auth/callback`, so the middleware must allow access (PROTECTED_ROUTES), not redirect to profile (AUTH_ROUTES).
+12. **Auth callback routes outside `[locale]`** — `/auth/confirm` and `/auth/callback` live at `src/app/auth/` because Supabase sends fixed redirect URLs with token params. The middleware has an explicit early return for `/auth/*` paths to prevent `next-intl` from intercepting them.
+13. **Email confirm discards session** — `/auth/confirm` uses a temporary response for `verifyOtp` and returns a clean redirect without session cookies. This prevents the middleware from redirecting `/login` → home (because user would appear authenticated).
+14. **Profile redirect** — Login and AUTH_ROUTES redirect to `/profile`. Login form uses `redirect` query param when available, otherwise defaults to `/profile`.

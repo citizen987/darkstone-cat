@@ -14,6 +14,12 @@ export const PAGES = [
   { slug: 'legal', path: '/legal' },
   { slug: 'privacy', path: '/privacy' },
   { slug: 'cookies', path: '/cookies' },
+  { slug: 'login', path: '/login' },
+  { slug: 'register', path: '/register' },
+  { slug: 'forgot-password', path: '/forgot-password' },
+  { slug: 'profile', path: '/profile' },
+  { slug: 'profile-edit', path: '/profile/edit' },
+  { slug: 'profile-card', path: '/profile/card' },
 ];
 
 export const DEVICES = ['mobile', 'desktop'];

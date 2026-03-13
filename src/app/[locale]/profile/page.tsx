@@ -1,0 +1,109 @@
+import { type Metadata } from "next";
+import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
+import { getAlternates, getBreadcrumbJsonLd, getWebPageJsonLd } from "@/lib/seo";
+import { getProfileData } from "@/lib/supabase/auth";
+import { decrypt } from "@/lib/encryption";
+import NavBar from "@/components/NavBar";
+import Footer from "@/components/Footer";
+import ScrollToTop from "@/components/ScrollToTop";
+import AuthHero from "@/components/auth/AuthHero";
+import ProfileView from "@/components/profile/ProfileView";
+
+export const revalidate = false;
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "metadata" });
+  const alternates = getAlternates(locale, "/profile");
+  return {
+    title: t("profile_title"),
+    description: t("profile_description"),
+    alternates,
+    robots: { index: false, follow: false },
+    openGraph: {
+      title: t("profile_title"),
+      description: t("profile_description"),
+      url: alternates.canonical,
+    },
+  };
+}
+
+export default async function ProfilePage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+
+  const profile = await getProfileData();
+  if (!profile) {
+    redirect(locale === "ca" ? "/login" : `/${locale}/login`);
+  }
+
+  const { email, member } = profile;
+
+  // Decrypt sensitive fields server-side
+  let phone: string | null = null;
+  let dni: string | null = null;
+
+  if (member.phone_encrypted) {
+    try {
+      phone = decrypt(member.phone_encrypted);
+    } catch {
+      phone = null;
+    }
+  }
+
+  if (member.dni_nie_encrypted) {
+    try {
+      dni = decrypt(member.dni_nie_encrypted);
+    } catch {
+      dni = null;
+    }
+  }
+
+  const tNav = await getTranslations({ locale, namespace: "nav" });
+  const t = await getTranslations({ locale, namespace: "metadata" });
+  const breadcrumbJsonLd = getBreadcrumbJsonLd(locale, [
+    { name: tNav("profile"), path: "/profile" },
+  ]);
+  const webPageJsonLd = getWebPageJsonLd(locale, "/profile", t("profile_title"), t("profile_description"));
+
+  return (
+    <main id="main-content" className="relative flex min-h-screen flex-col font-sans selection:bg-stone-300">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify([breadcrumbJsonLd, webPageJsonLd]) }}
+      />
+      <NavBar />
+      <AuthHero titleKey="title" subtitleKey="subtitle" namespace="profile" />
+
+      <section className="flex-1 bg-brand-beige pb-20">
+        <div className="container mx-auto max-w-4xl px-6 pt-16">
+          <ProfileView
+            email={email}
+            firstName={member.first_name}
+            lastName={member.last_name}
+            phone={phone}
+            dni={dni}
+            postalCode={member.postal_code}
+            ludoyaUsername={member.ludoya_username}
+            bggUsername={member.bgg_username}
+            memberNumber={member.member_number}
+            role={member.role}
+            newsletterAccepted={member.newsletter_accepted}
+            membershipStartDate={member.membership_start_date}
+          />
+        </div>
+      </section>
+
+      <Footer />
+      <ScrollToTop />
+    </main>
+  );
+}

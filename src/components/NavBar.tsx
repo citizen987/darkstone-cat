@@ -1,11 +1,13 @@
 "use client";
 
 import Image from "next/image";
-import { Link, usePathname } from "@/i18n/routing";
+import { Link, usePathname, useRouter } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useRef, useState, useMemo } from "react";
 import { useLenis } from "./SmoothScroll";
 import LanguageSwitcher from "./LanguageSwitcher";
+import { useAuthUser } from "@/hooks/useAuthUser";
+import { createClient } from "@/lib/supabase/client";
 
 function hexToRgba(hex: string, alpha: number): string {
   const r = parseInt(hex.slice(1, 3), 16);
@@ -47,19 +49,32 @@ const SUBPAGE_THEMES: Record<string, { text: string; bg: string }> = {
   "/faq": { text: "#FAFAF9", bg: "#1C1917" },
   "/events": { text: "#FAFAF9", bg: "#1C1917" },
   "/events/images": { text: "#FAFAF9", bg: "#1C1917" },
+  "/login": { text: "#FAFAF9", bg: "#1C1917" },
+  "/register": { text: "#FAFAF9", bg: "#1C1917" },
+  "/forgot-password": { text: "#FAFAF9", bg: "#1C1917" },
+  "/reset-password": { text: "#FAFAF9", bg: "#1C1917" },
+  "/profile": { text: "#FAFAF9", bg: "#1C1917" },
+  "/profile/edit": { text: "#FAFAF9", bg: "#1C1917" },
+  "/profile/card": { text: "#FAFAF9", bg: "#1C1917" },
+  "/admin": { text: "#FAFAF9", bg: "#1C1917" },
+  "/admin/members": { text: "#FAFAF9", bg: "#1C1917" },
 };
 
 export default function NavBar() {
   const t = useTranslations("nav");
   const pathname = usePathname();
+  const router = useRouter();
   const lenis = useLenis();
   const isHomePage = pathname === "/";
+  const { user, role, loading: authLoading } = useAuthUser();
 
   const [scrolled, setScrolled] = useState(false);
   const [homeActiveSection, setHomeActiveSection] = useState("");
   const [mobileOpen, setMobileOpen] = useState(false);
   const [menuClosing, setMenuClosing] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const hamburgerRef = useRef<HTMLButtonElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Determine theme based on page context
   const theme = useMemo(() => {
@@ -194,6 +209,25 @@ export default function NavBar() {
     }, 500);
   }, []);
 
+  // Close dropdown on click outside
+  useEffect(() => {
+    if (!dropdownOpen) return;
+    function handleClick(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [dropdownOpen]);
+
+  const handleLogout = useCallback(async () => {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    setDropdownOpen(false);
+    router.replace("/");
+  }, [router]);
+
   const isActive = useCallback((href: string) => pathname === href, [pathname]);
 
   const hamburgerColor = mobileOpen ? "#FAFAF9" : theme.text;
@@ -265,6 +299,67 @@ export default function NavBar() {
             <div className="ml-4 pl-4 border-l border-current/15">
               <LanguageSwitcher colorOverride={theme.text} />
             </div>
+
+            {/* Auth button (desktop) */}
+            {!authLoading && (
+              <div className="ml-3 relative" ref={dropdownRef}>
+                {user ? (
+                  <>
+                    <button
+                      onClick={() => setDropdownOpen((o) => !o)}
+                      className="rounded-xl px-4 py-2 text-sm font-medium transition-colors"
+                      style={{
+                        backgroundColor: theme.text,
+                        color: theme.bg,
+                        transition: "background-color 0.4s, color 0.4s",
+                      }}
+                    >
+                      {user.user_metadata?.first_name ?? t("profile")}
+                    </button>
+                    {dropdownOpen && (
+                      <div
+                        className="absolute right-0 mt-2 w-44 rounded-xl border border-stone-custom/10 bg-brand-white py-1 shadow-lg"
+                      >
+                        <Link
+                          href="/profile"
+                          onClick={() => setDropdownOpen(false)}
+                          className="block px-4 py-2 text-sm text-stone-custom transition-colors hover:bg-stone-custom/5"
+                        >
+                          {t("profile")}
+                        </Link>
+                        {role === "admin" && (
+                          <Link
+                            href="/admin"
+                            onClick={() => setDropdownOpen(false)}
+                            className="block px-4 py-2 text-sm text-stone-custom transition-colors hover:bg-stone-custom/5"
+                          >
+                            {t("admin")}
+                          </Link>
+                        )}
+                        <button
+                          onClick={handleLogout}
+                          className="block w-full px-4 py-2 text-left text-sm text-stone-custom transition-colors hover:bg-stone-custom/5"
+                        >
+                          {t("logout")}
+                        </button>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <Link
+                    href="/login"
+                    className="rounded-xl px-4 py-2 text-sm font-medium transition-colors"
+                    style={{
+                      backgroundColor: theme.text,
+                      color: theme.bg,
+                      transition: "background-color 0.4s, color 0.4s",
+                    }}
+                  >
+                    {t("login")}
+                  </Link>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Mobile hamburger */}
@@ -364,6 +459,53 @@ export default function NavBar() {
             >
               <LanguageSwitcher colorOverride="#FAFAF9" />
             </div>
+
+            {/* Auth links (mobile) */}
+            {!authLoading && (
+              <div
+                className="mt-6 pt-6 border-t border-brand-white/15 flex flex-col items-center gap-4"
+                style={{
+                  animation: menuClosing
+                    ? "none"
+                    : "nav-link-enter 0.4s ease-out 0.5s both",
+                }}
+              >
+                {user ? (
+                  <>
+                    <Link
+                      href="/profile"
+                      onClick={closeMobileMenu}
+                      className="text-xl font-bold tracking-tight text-brand-white/90 transition-colors hover:text-brand-white"
+                    >
+                      {t("profile")}
+                    </Link>
+                    {role === "admin" && (
+                      <Link
+                        href="/admin"
+                        onClick={closeMobileMenu}
+                        className="text-xl font-bold tracking-tight text-brand-white/90 transition-colors hover:text-brand-white"
+                      >
+                        {t("admin")}
+                      </Link>
+                    )}
+                    <button
+                      onClick={() => { handleLogout(); closeMobileMenu(); }}
+                      className="text-xl font-bold tracking-tight text-brand-white/60 transition-colors hover:text-brand-white"
+                    >
+                      {t("logout")}
+                    </button>
+                  </>
+                ) : (
+                  <Link
+                    href="/login"
+                    onClick={closeMobileMenu}
+                    className="rounded-xl bg-brand-white px-6 py-2.5 text-sm font-semibold text-stone-custom transition-colors hover:bg-brand-white/90"
+                  >
+                    {t("login")}
+                  </Link>
+                )}
+              </div>
+            )}
           </nav>
         </div>
       )}
