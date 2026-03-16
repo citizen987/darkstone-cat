@@ -30,24 +30,33 @@ export function useAuthUser(): AuthState {
     }
 
     // Initial fetch
-    supabase.auth.getUser().then(async ({ data: { user } }) => {
-      if (user) {
-        const role = await fetchRole(user.id);
-        setState({ user, role, loading: false });
-      } else {
+    supabase.auth
+      .getUser()
+      .then(async ({ data: { user } }) => {
+        if (user) {
+          const role = await fetchRole(user.id);
+          setState({ user, role, loading: false });
+        } else {
+          setState({ user: null, role: null, loading: false });
+        }
+      })
+      .catch(() => {
         setState({ user: null, role: null, loading: false });
-      }
-    });
+      });
 
     // Listen for auth state changes
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      if (session?.user) {
-        const role = await fetchRole(session.user.id);
-        setState({ user: session.user, role, loading: false });
-      } else {
-        setState({ user: null, role: null, loading: false });
+      try {
+        if (session?.user) {
+          const role = await fetchRole(session.user.id);
+          setState({ user: session.user, role, loading: false });
+        } else {
+          setState({ user: null, role: null, loading: false });
+        }
+      } catch {
+        setState({ user: session?.user ?? null, role: null, loading: false });
       }
     });
 
