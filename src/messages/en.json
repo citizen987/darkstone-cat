@@ -17,7 +17,8 @@
     "profile_edit": "Edit profile",
     "profile_card": "Member card",
     "logout": "Log out",
-    "admin": "Admin"
+    "admin": "Admin",
+    "admin_members": "Members"
   },
   "hero": {
     "tagline": "Board Games & RPG in Terrassa",
@@ -377,7 +378,11 @@
     "profile_edit_title": "Edit profile — Darkstone Catalunya",
     "profile_edit_description": "Update your Darkstone Catalunya member data.",
     "profile_card_title": "Member card — Darkstone Catalunya",
-    "profile_card_description": "View and download your Darkstone Catalunya member card."
+    "profile_card_description": "View and download your Darkstone Catalunya member card.",
+    "admin_title": "Administration — Darkstone Catalunya",
+    "admin_description": "Darkstone Catalunya administration panel.",
+    "admin_members_title": "Members — Administration — Darkstone Catalunya",
+    "admin_members_description": "Darkstone Catalunya members list."
   },
   "not_found": {
     "title": "Page not found",
@@ -674,5 +679,51 @@
     "delete_error": "Could not delete account. Please try again.",
 
     "download_generating": "Generating your data..."
+  },
+  "admin": {
+    "title": "Administration",
+    "subtitle": "Darkstone Catalunya administration panel",
+
+    "unauthorized_title": "Restricted access",
+    "unauthorized_message": "You need administrator permissions to access this page.",
+
+    "stat_active": "Active members",
+    "stat_new_month": "New this month",
+    "stat_inactive": "Inactive",
+    "stat_newsletter": "Newsletter",
+
+    "nav_members": "Member management",
+    "nav_members_description": "View, search and export the members list",
+    "nav_event_images": "Event images",
+    "nav_event_images_description": "Generate images for events",
+
+    "members_title": "Members",
+    "members_subtitle": "Members list management",
+    "members_search_placeholder": "Search by name, email or member number...",
+    "members_no_results": "No members found matching this criteria.",
+    "members_showing": "Showing {from}-{to} of {total} members",
+
+    "col_number": "No.",
+    "col_name": "Name",
+    "col_email": "Email",
+    "col_phone": "Phone",
+    "col_dni": "ID (DNI/NIE)",
+    "col_role": "Role",
+    "col_status": "Status",
+    "col_since": "Since",
+
+    "role_member": "Member",
+    "role_admin": "Admin",
+    "status_active": "Active",
+    "status_inactive": "Inactive",
+    "not_provided": "—",
+
+    "export_button": "Export CSV",
+    "export_title": "Export member data",
+    "export_warning": "The CSV file will contain sensitive personal data (full ID numbers and phone numbers). Make sure to handle this file securely and in compliance with data protection regulations.",
+    "export_confirm": "Download CSV",
+    "export_cancel": "Cancel",
+    "export_error": "Could not generate the export. Please try again.",
+    "export_downloading": "Generating..."
   }
 }

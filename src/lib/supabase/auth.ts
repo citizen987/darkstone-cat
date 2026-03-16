@@ -1,6 +1,8 @@
 import { createClient } from "./server";
 import type { User } from "@supabase/supabase-js";
 
+export type AdminMember = Member & { email: string };
+
 export type Member = {
   id: string;
   first_name: string;

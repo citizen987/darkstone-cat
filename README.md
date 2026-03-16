@@ -55,6 +55,8 @@
 | `/profile` | Member profile view (protected) |
 | `/profile/edit` | Profile edit form (protected) |
 | `/profile/card` | Member card preview & download (protected) |
+| `/admin` | Admin dashboard with stats (admin only) |
+| `/admin/members` | Member list with search, sort & CSV export (admin only) |
 
 All routes are localized under `/[locale]/` (`ca`, `es`, `en`).
 

@@ -20,6 +20,8 @@ export const PAGES = [
   { slug: 'profile', path: '/profile' },
   { slug: 'profile-edit', path: '/profile/edit' },
   { slug: 'profile-card', path: '/profile/card' },
+  { slug: 'admin', path: '/admin' },
+  { slug: 'admin-members', path: '/admin/members' },
 ];
 
 export const DEVICES = ['mobile', 'desktop'];

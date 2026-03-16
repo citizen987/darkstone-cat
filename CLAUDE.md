@@ -74,9 +74,12 @@ Next.js App Router with `next-intl` v4 for internationalization:
 | `/profile` | `profile/page.tsx` | Member profile view — protected route (`revalidate = false`, `noindex`) |
 | `/profile/edit` | `profile/edit/page.tsx` | Profile edit form — protected route (`revalidate = false`, `noindex`) |
 | `/profile/card` | `profile/card/page.tsx` | Member card preview & download — protected route (`revalidate = false`, `noindex`) |
+| `/admin` | `admin/page.tsx` | Admin dashboard with stats and navigation — admin route (`revalidate = false`, `noindex`) |
+| `/admin/members` | `admin/members/page.tsx` | Member list with search, sort and CSV export — admin route (`revalidate = false`, `noindex`) |
 
 API route: `src/app/api/contact/route.ts` — POST endpoint using Resend to send emails.
 API route: `src/app/api/members/card/route.ts` — GET endpoint for member card image (auth required). `?preview=1` for inline display, without for download.
+API route: `src/app/api/admin/members/export/route.ts` — GET endpoint for CSV export of all members (admin required). Full decrypted data with UTF-8 BOM.
 Auth callback routes: `src/app/auth/confirm/route.ts` (email confirmation), `src/app/auth/callback/route.ts` (password recovery). These live outside `[locale]` because Supabase sends fixed URLs.
 
 ### Provider Stack (layout.tsx)
@@ -136,6 +139,7 @@ All interactive components use `"use client"`. Components are organized by page:
 - `src/components/conduct/` — Code of conduct (ConductContent)
 - `src/components/auth/` — Auth pages (AuthHero, LoginForm, RegisterForm, ForgotPasswordForm, ResetPasswordForm)
 - `src/components/profile/` — Profile pages (ProfileView, ProfileEditForm, MemberCard, DeleteAccountDialog)
+- `src/components/admin/` — Admin pages (AdminDashboard, MembersTable, ExportConfirmDialog)
 - `src/components/legal/` — Legal pages (LegalPageContent, LegalContent, PrivacyContent, CookiesContent)
 - Root-level: NavBar, Footer, SmoothScroll, CookieBanner, CookieConsentProvider, GoogleAnalytics, ScrollProgress, ScrollToTop, TextReveal, LanguageSwitcher, ThemeLink, ErrorContent
 
@@ -235,7 +239,7 @@ The `public` schema is the primary working schema.
 
 ## Translation Key Namespaces
 
-`nav`, `hero`, `about`, `activities`, `schedule`, `join_us`, `location`, `footer`, `about_page`, `ludoteca`, `contact_page`, `events`, `faq`, `cookies`, `conduct`, `legal`, `privacy`, `error_page`, `not_found`, `metadata`, `auth`, `profile`
+`nav`, `hero`, `about`, `activities`, `schedule`, `join_us`, `location`, `footer`, `about_page`, `ludoteca`, `contact_page`, `events`, `faq`, `cookies`, `conduct`, `legal`, `privacy`, `error_page`, `not_found`, `metadata`, `auth`, `profile`, `admin`
 
 ## Path Alias
 

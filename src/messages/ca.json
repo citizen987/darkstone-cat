@@ -17,7 +17,8 @@
     "profile_edit": "Editar perfil",
     "profile_card": "Carnet de soci",
     "logout": "Tancar sessió",
-    "admin": "Admin"
+    "admin": "Admin",
+    "admin_members": "Socis"
   },
   "hero": {
     "tagline": "Jocs de Taula i Rol a Terrassa",
@@ -377,7 +378,11 @@
     "profile_edit_title": "Editar perfil — Darkstone Catalunya",
     "profile_edit_description": "Actualitza les teves dades de soci de Darkstone Catalunya.",
     "profile_card_title": "Carnet de soci — Darkstone Catalunya",
-    "profile_card_description": "Visualitza i descarrega el teu carnet de soci de Darkstone Catalunya."
+    "profile_card_description": "Visualitza i descarrega el teu carnet de soci de Darkstone Catalunya.",
+    "admin_title": "Administració — Darkstone Catalunya",
+    "admin_description": "Panell d'administració de Darkstone Catalunya.",
+    "admin_members_title": "Socis — Administració — Darkstone Catalunya",
+    "admin_members_description": "Llistat de socis de Darkstone Catalunya."
   },
   "not_found": {
     "title": "Pàgina no trobada",
@@ -674,5 +679,51 @@
     "delete_error": "No s'ha pogut eliminar el compte. Torna-ho a provar.",
 
     "download_generating": "Generant les teves dades..."
+  },
+  "admin": {
+    "title": "Administració",
+    "subtitle": "Panell d'administració de Darkstone Catalunya",
+
+    "unauthorized_title": "Accés restringit",
+    "unauthorized_message": "Necessites permisos d'administrador per accedir a aquesta pàgina.",
+
+    "stat_active": "Socis actius",
+    "stat_new_month": "Nous aquest mes",
+    "stat_inactive": "Inactius",
+    "stat_newsletter": "Butlletí",
+
+    "nav_members": "Gestió de socis",
+    "nav_members_description": "Consulta, cerca i exporta el llistat de socis",
+    "nav_event_images": "Imatges d'esdeveniments",
+    "nav_event_images_description": "Genera imatges per als esdeveniments",
+
+    "members_title": "Socis",
+    "members_subtitle": "Gestió del llistat de socis",
+    "members_search_placeholder": "Cercar per nom, email o número de soci...",
+    "members_no_results": "No s'han trobat socis amb aquest criteri.",
+    "members_showing": "Mostrant {from}-{to} de {total} socis",
+
+    "col_number": "Núm",
+    "col_name": "Nom",
+    "col_email": "Email",
+    "col_phone": "Telèfon",
+    "col_dni": "DNI/NIE",
+    "col_role": "Rol",
+    "col_status": "Estat",
+    "col_since": "Des de",
+
+    "role_member": "Soci",
+    "role_admin": "Admin",
+    "status_active": "Actiu",
+    "status_inactive": "Inactiu",
+    "not_provided": "—",
+
+    "export_button": "Exportar CSV",
+    "export_title": "Exportar dades de socis",
+    "export_warning": "El fitxer CSV contindrà dades personals sensibles (DNI/NIE i telèfon complets). Assegura't de tractar aquest fitxer de forma segura i d'acord amb la normativa de protecció de dades.",
+    "export_confirm": "Descarregar CSV",
+    "export_cancel": "Cancel·lar",
+    "export_error": "No s'ha pogut generar l'exportació. Torna-ho a provar.",
+    "export_downloading": "Generant..."
   }
 }
