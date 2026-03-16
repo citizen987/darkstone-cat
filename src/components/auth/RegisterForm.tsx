@@ -81,7 +81,7 @@ export default function RegisterForm() {
     const lastName = (formData.get("last_name") as string).trim();
 
     const supabase = createClient();
-    const { error } = await supabase.auth.signUp({
+    const { data: signUpData, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -106,7 +106,9 @@ export default function RegisterForm() {
     }
 
     // Update member with optional fields + consents via Server Action
+    // Uses admin client because no session exists yet (email confirmation pending)
     const { error: updateError } = await updateMemberAfterSignup({
+      userId: signUpData.user?.id ?? "",
       phone: formData.get("phone") as string,
       dni: formData.get("dni") as string,
       postal_code: formData.get("postal_code") as string,

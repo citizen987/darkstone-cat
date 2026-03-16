@@ -3,7 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
-import { Link, useRouter } from "@/i18n/routing";
+import { Link } from "@/i18n/routing";
 import { motion, AnimatePresence } from "motion/react";
 import { createClient } from "@/lib/supabase/client";
 
@@ -16,7 +16,6 @@ type FieldErrors = {
 
 export default function LoginForm() {
   const t = useTranslations("auth");
-  const router = useRouter();
   const searchParams = useSearchParams();
   const [status, setStatus] = useState<FormStatus>("idle");
   const [errorMessage, setErrorMessage] = useState("");
@@ -74,7 +73,10 @@ export default function LoginForm() {
       return;
     }
 
-    router.replace(redirect ?? "/profile");
+    // Hard navigation to ensure cookies are fully set before SSR reads them.
+    // Using router.replace() here causes repeated RSC fetches due to
+    // token refresh race between client-side Supabase and the middleware.
+    window.location.href = redirect ?? "/profile";
   }
 
   const isSubmitting = status === "submitting";

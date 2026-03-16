@@ -58,16 +58,24 @@ export async function getProfileData(): Promise<{
   const supabase = await createClient();
   const {
     data: { user },
+    error: userError,
   } = await supabase.auth.getUser();
-  if (!user) return null;
 
-  const { data } = await supabase
+  if (userError || !user) {
+    console.error("[getProfileData] getUser failed:", userError?.message ?? "no user");
+    return null;
+  }
+
+  const { data, error: memberError } = await supabase
     .from("members")
     .select("*")
     .eq("id", user.id)
     .single();
 
-  if (!data) return null;
+  if (memberError || !data) {
+    console.error("[getProfileData] members query failed:", memberError?.message ?? "no data", "userId:", user.id);
+    return null;
+  }
 
   return {
     email: user.email ?? "",

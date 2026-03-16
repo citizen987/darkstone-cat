@@ -1,9 +1,10 @@
 "use server";
 
-import { createClient } from "./server";
+import { createAdminClient } from "./admin";
 import { encrypt } from "@/lib/encryption";
 
 type SignupData = {
+  userId: string;
   phone?: string;
   dni?: string;
   postal_code?: string;
@@ -17,15 +18,11 @@ type SignupData = {
 export async function updateMemberAfterSignup(
   data: SignupData
 ): Promise<{ error: string | null }> {
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    return { error: "Not authenticated" };
+  if (!data.userId) {
+    return { error: "Missing user ID" };
   }
+
+  const supabase = createAdminClient();
 
   const now = new Date().toISOString();
 
@@ -60,7 +57,7 @@ export async function updateMemberAfterSignup(
   const { error } = await supabase
     .from("members")
     .update(updatePayload)
-    .eq("id", user.id);
+    .eq("id", data.userId);
 
   if (error) {
     return { error: error.message };

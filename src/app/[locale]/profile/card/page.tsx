@@ -1,8 +1,6 @@
 import { type Metadata } from "next";
-import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { getAlternates, getBreadcrumbJsonLd, getWebPageJsonLd } from "@/lib/seo";
-import { getCurrentUser } from "@/lib/supabase/auth";
 import NavBar from "@/components/NavBar";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -38,11 +36,6 @@ export default async function ProfileCardPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-
-  const user = await getCurrentUser();
-  if (!user) {
-    redirect(locale === "ca" ? "/login" : `/${locale}/login`);
-  }
 
   const tNav = await getTranslations({ locale, namespace: "nav" });
   const t = await getTranslations({ locale, namespace: "metadata" });

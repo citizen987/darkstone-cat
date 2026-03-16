@@ -1,5 +1,4 @@
 import { type Metadata } from "next";
-import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { getAlternates, getBreadcrumbJsonLd, getWebPageJsonLd } from "@/lib/seo";
 import { getProfileData } from "@/lib/supabase/auth";
@@ -41,13 +40,35 @@ export default async function ProfileEditPage({
   const { locale } = await params;
 
   const profile = await getProfileData();
+
+  const tNav = await getTranslations({ locale, namespace: "nav" });
+  const t = await getTranslations({ locale, namespace: "metadata" });
+  const breadcrumbJsonLd = getBreadcrumbJsonLd(locale, [
+    { name: tNav("profile"), path: "/profile" },
+    { name: tNav("profile_edit"), path: "/profile/edit" },
+  ]);
+  const webPageJsonLd = getWebPageJsonLd(locale, "/profile/edit", t("profile_edit_title"), t("profile_edit_description"));
+
   if (!profile) {
-    redirect(locale === "ca" ? "/login" : `/${locale}/login`);
+    return (
+      <main id="main-content" className="relative flex min-h-screen flex-col font-sans selection:bg-stone-300">
+        <NavBar />
+        <AuthHero titleKey="edit_title" subtitleKey="edit_subtitle" namespace="profile" />
+        <section className="flex-1 bg-brand-beige pb-20">
+          <div className="container mx-auto max-w-4xl px-6 pt-16">
+            <div className="rounded-xl border border-red-200 bg-red-50 px-6 py-4 text-sm text-red-700">
+              Could not load profile data. Please try refreshing the page.
+            </div>
+          </div>
+        </section>
+        <Footer />
+        <ScrollToTop />
+      </main>
+    );
   }
 
   const { email, member } = profile;
 
-  // Decrypt sensitive fields server-side for form initial values
   let phone: string | null = null;
   let dni: string | null = null;
 
@@ -66,14 +87,6 @@ export default async function ProfileEditPage({
       dni = null;
     }
   }
-
-  const tNav = await getTranslations({ locale, namespace: "nav" });
-  const t = await getTranslations({ locale, namespace: "metadata" });
-  const breadcrumbJsonLd = getBreadcrumbJsonLd(locale, [
-    { name: tNav("profile"), path: "/profile" },
-    { name: tNav("profile_edit"), path: "/profile/edit" },
-  ]);
-  const webPageJsonLd = getWebPageJsonLd(locale, "/profile/edit", t("profile_edit_title"), t("profile_edit_description"));
 
   return (
     <main id="main-content" className="relative flex min-h-screen flex-col font-sans selection:bg-stone-300">
