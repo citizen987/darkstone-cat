@@ -1,13 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { Link, usePathname, useRouter } from "@/i18n/routing";
+import { Link, usePathname } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useRef, useState, useMemo } from "react";
 import { useLenis } from "./SmoothScroll";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { useAuthUser } from "@/hooks/useAuthUser";
-import { createClient } from "@/lib/supabase/client";
 
 function hexToRgba(hex: string, alpha: number): string {
   const r = parseInt(hex.slice(1, 3), 16);
@@ -63,10 +62,9 @@ const SUBPAGE_THEMES: Record<string, { text: string; bg: string }> = {
 export default function NavBar() {
   const t = useTranslations("nav");
   const pathname = usePathname();
-  const router = useRouter();
   const lenis = useLenis();
   const isHomePage = pathname === "/";
-  const { user, role, loading: authLoading } = useAuthUser();
+  const { user, role } = useAuthUser();
 
   const [scrolled, setScrolled] = useState(false);
   const [homeActiveSection, setHomeActiveSection] = useState("");
@@ -217,16 +215,29 @@ export default function NavBar() {
         setDropdownOpen(false);
       }
     }
-    document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
+    document.addEventListener("click", handleClick);
+    return () => document.removeEventListener("click", handleClick);
   }, [dropdownOpen]);
 
-  const handleLogout = useCallback(async () => {
-    const supabase = createClient();
-    await supabase.auth.signOut();
+  const handleLogout = useCallback(() => {
     setDropdownOpen(false);
-    router.replace("/");
-  }, [router]);
+
+    // Supabase signOut() acquires a Navigator Lock that often hangs.
+    // Instead, delete the auth cookies directly and hard-redirect.
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    if (url) {
+      const projectRef = new URL(url).hostname.split(".")[0];
+      const key = `sb-${projectRef}-auth-token`;
+      const expire = "=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+      document.cookie = `${key}${expire}`;
+      // Also clear chunked cookies (.0, .1, ...)
+      for (let i = 0; i < 10; i++) {
+        document.cookie = `${key}.${i}${expire}`;
+      }
+    }
+
+    window.location.href = "/";
+  }, []);
 
   const isActive = useCallback((href: string) => pathname === href, [pathname]);
 
@@ -302,12 +313,7 @@ export default function NavBar() {
 
             {/* Auth button (desktop) */}
             <div className="ml-3 relative" ref={dropdownRef}>
-              {authLoading ? (
-                <div
-                  className="rounded-xl px-4 py-2 h-[36px] w-[100px] animate-pulse"
-                  style={{ backgroundColor: `${theme.text}20` }}
-                />
-              ) : user ? (
+              {user ? (
                 <>
                   <button
                     onClick={() => setDropdownOpen((o) => !o)}
@@ -322,7 +328,7 @@ export default function NavBar() {
                   </button>
                   {dropdownOpen && (
                     <div
-                      className="absolute right-0 mt-2 w-44 rounded-xl border border-stone-custom/10 bg-brand-white py-1 shadow-lg"
+                      className="absolute right-0 z-50 mt-2 w-44 rounded-xl border border-stone-custom/10 bg-brand-white py-1 shadow-lg"
                     >
                       <Link
                         href="/profile"
@@ -342,7 +348,7 @@ export default function NavBar() {
                       )}
                       <button
                         onClick={handleLogout}
-                        className="block w-full px-4 py-2 text-left text-sm text-stone-custom transition-colors hover:bg-stone-custom/5"
+                        className="block w-full cursor-pointer px-4 py-2 text-left text-sm text-stone-custom transition-colors hover:bg-stone-custom/5"
                       >
                         {t("logout")}
                       </button>
@@ -472,9 +478,7 @@ export default function NavBar() {
                   : "nav-link-enter 0.4s ease-out 0.5s both",
               }}
             >
-              {authLoading ? (
-                <div className="rounded-xl h-[40px] w-[140px] animate-pulse bg-brand-white/20" />
-              ) : user ? (
+              {user ? (
                 <>
                   <Link
                     href="/profile"
