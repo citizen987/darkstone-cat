@@ -301,53 +301,16 @@ export default function NavBar() {
             </div>
 
             {/* Auth button (desktop) */}
-            {!authLoading && (
-              <div className="ml-3 relative" ref={dropdownRef}>
-                {user ? (
-                  <>
-                    <button
-                      onClick={() => setDropdownOpen((o) => !o)}
-                      className="rounded-xl px-4 py-2 text-sm font-medium transition-colors"
-                      style={{
-                        backgroundColor: theme.text,
-                        color: theme.bg,
-                        transition: "background-color 0.4s, color 0.4s",
-                      }}
-                    >
-                      {user.user_metadata?.first_name ?? t("profile")}
-                    </button>
-                    {dropdownOpen && (
-                      <div
-                        className="absolute right-0 mt-2 w-44 rounded-xl border border-stone-custom/10 bg-brand-white py-1 shadow-lg"
-                      >
-                        <Link
-                          href="/profile"
-                          onClick={() => setDropdownOpen(false)}
-                          className="block px-4 py-2 text-sm text-stone-custom transition-colors hover:bg-stone-custom/5"
-                        >
-                          {t("profile")}
-                        </Link>
-                        {role === "admin" && (
-                          <Link
-                            href="/admin"
-                            onClick={() => setDropdownOpen(false)}
-                            className="block px-4 py-2 text-sm text-stone-custom transition-colors hover:bg-stone-custom/5"
-                          >
-                            {t("admin")}
-                          </Link>
-                        )}
-                        <button
-                          onClick={handleLogout}
-                          className="block w-full px-4 py-2 text-left text-sm text-stone-custom transition-colors hover:bg-stone-custom/5"
-                        >
-                          {t("logout")}
-                        </button>
-                      </div>
-                    )}
-                  </>
-                ) : (
-                  <Link
-                    href="/login"
+            <div className="ml-3 relative" ref={dropdownRef}>
+              {authLoading ? (
+                <div
+                  className="rounded-xl px-4 py-2 h-[36px] w-[100px] animate-pulse"
+                  style={{ backgroundColor: `${theme.text}20` }}
+                />
+              ) : user ? (
+                <>
+                  <button
+                    onClick={() => setDropdownOpen((o) => !o)}
                     className="rounded-xl px-4 py-2 text-sm font-medium transition-colors"
                     style={{
                       backgroundColor: theme.text,
@@ -355,11 +318,51 @@ export default function NavBar() {
                       transition: "background-color 0.4s, color 0.4s",
                     }}
                   >
-                    {t("login")}
-                  </Link>
-                )}
-              </div>
-            )}
+                    {user.user_metadata?.first_name ?? t("profile")}
+                  </button>
+                  {dropdownOpen && (
+                    <div
+                      className="absolute right-0 mt-2 w-44 rounded-xl border border-stone-custom/10 bg-brand-white py-1 shadow-lg"
+                    >
+                      <Link
+                        href="/profile"
+                        onClick={() => setDropdownOpen(false)}
+                        className="block px-4 py-2 text-sm text-stone-custom transition-colors hover:bg-stone-custom/5"
+                      >
+                        {t("profile")}
+                      </Link>
+                      {role === "admin" && (
+                        <Link
+                          href="/admin"
+                          onClick={() => setDropdownOpen(false)}
+                          className="block px-4 py-2 text-sm text-stone-custom transition-colors hover:bg-stone-custom/5"
+                        >
+                          {t("admin")}
+                        </Link>
+                      )}
+                      <button
+                        onClick={handleLogout}
+                        className="block w-full px-4 py-2 text-left text-sm text-stone-custom transition-colors hover:bg-stone-custom/5"
+                      >
+                        {t("logout")}
+                      </button>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <Link
+                  href="/login"
+                  className="rounded-xl px-4 py-2 text-sm font-medium transition-colors"
+                  style={{
+                    backgroundColor: theme.text,
+                    color: theme.bg,
+                    transition: "background-color 0.4s, color 0.4s",
+                  }}
+                >
+                  {t("login")}
+                </Link>
+              )}
+            </div>
           </div>
 
           {/* Mobile hamburger */}
@@ -461,51 +464,51 @@ export default function NavBar() {
             </div>
 
             {/* Auth links (mobile) */}
-            {!authLoading && (
-              <div
-                className="mt-6 pt-6 border-t border-brand-white/15 flex flex-col items-center gap-4"
-                style={{
-                  animation: menuClosing
-                    ? "none"
-                    : "nav-link-enter 0.4s ease-out 0.5s both",
-                }}
-              >
-                {user ? (
-                  <>
+            <div
+              className="mt-6 pt-6 border-t border-brand-white/15 flex flex-col items-center gap-4"
+              style={{
+                animation: menuClosing
+                  ? "none"
+                  : "nav-link-enter 0.4s ease-out 0.5s both",
+              }}
+            >
+              {authLoading ? (
+                <div className="rounded-xl h-[40px] w-[140px] animate-pulse bg-brand-white/20" />
+              ) : user ? (
+                <>
+                  <Link
+                    href="/profile"
+                    onClick={closeMobileMenu}
+                    className="text-xl font-bold tracking-tight text-brand-white/90 transition-colors hover:text-brand-white"
+                  >
+                    {t("profile")}
+                  </Link>
+                  {role === "admin" && (
                     <Link
-                      href="/profile"
+                      href="/admin"
                       onClick={closeMobileMenu}
                       className="text-xl font-bold tracking-tight text-brand-white/90 transition-colors hover:text-brand-white"
                     >
-                      {t("profile")}
+                      {t("admin")}
                     </Link>
-                    {role === "admin" && (
-                      <Link
-                        href="/admin"
-                        onClick={closeMobileMenu}
-                        className="text-xl font-bold tracking-tight text-brand-white/90 transition-colors hover:text-brand-white"
-                      >
-                        {t("admin")}
-                      </Link>
-                    )}
-                    <button
-                      onClick={() => { handleLogout(); closeMobileMenu(); }}
-                      className="text-xl font-bold tracking-tight text-brand-white/60 transition-colors hover:text-brand-white"
-                    >
-                      {t("logout")}
-                    </button>
-                  </>
-                ) : (
-                  <Link
-                    href="/login"
-                    onClick={closeMobileMenu}
-                    className="rounded-xl bg-brand-white px-6 py-2.5 text-sm font-semibold text-stone-custom transition-colors hover:bg-brand-white/90"
+                  )}
+                  <button
+                    onClick={() => { handleLogout(); closeMobileMenu(); }}
+                    className="text-xl font-bold tracking-tight text-brand-white/60 transition-colors hover:text-brand-white"
                   >
-                    {t("login")}
-                  </Link>
-                )}
-              </div>
-            )}
+                    {t("logout")}
+                  </button>
+                </>
+              ) : (
+                <Link
+                  href="/login"
+                  onClick={closeMobileMenu}
+                  className="rounded-xl bg-brand-white px-6 py-2.5 text-sm font-semibold text-stone-custom transition-colors hover:bg-brand-white/90"
+                >
+                  {t("login")}
+                </Link>
+              )}
+            </div>
           </nav>
         </div>
       )}

@@ -10,6 +10,66 @@ type AuthState = {
   loading: boolean;
 };
 
+/**
+ * Reads the Supabase session directly from browser cookies.
+ * Instant, synchronous — bypasses Supabase's Navigator Lock and initializePromise.
+ */
+function readSessionCookie(): { user: User } | null {
+  if (typeof document === "undefined") return null;
+
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  if (!url) return null;
+
+  const projectRef = new URL(url).hostname.split(".")[0];
+  const storageKey = `sb-${projectRef}-auth-token`;
+
+  // Parse document.cookie into a map
+  const cookies: Record<string, string> = {};
+  for (const c of document.cookie.split(";")) {
+    const eq = c.indexOf("=");
+    if (eq < 0) continue;
+    cookies[c.substring(0, eq).trim()] = c.substring(eq + 1);
+  }
+
+  // Single cookie or chunked (name.0, name.1, ...)
+  let raw = cookies[storageKey] ?? "";
+  if (!raw) {
+    const chunks: string[] = [];
+    for (let i = 0; ; i++) {
+      const chunk = cookies[`${storageKey}.${i}`];
+      if (chunk === undefined) break;
+      chunks.push(chunk);
+    }
+    raw = chunks.join("");
+  }
+  if (!raw) return null;
+
+  try {
+    let decoded = decodeURIComponent(raw);
+
+    // @supabase/ssr encodes as "base64-" + base64url(JSON)
+    if (decoded.startsWith("base64-")) {
+      const b64 = decoded
+        .substring(7)
+        .replace(/-/g, "+")
+        .replace(/_/g, "/");
+      const padded = b64 + "=".repeat((4 - (b64.length % 4)) % 4);
+      const binary = atob(padded);
+      const bytes = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i++) {
+        bytes[i] = binary.charCodeAt(i);
+      }
+      decoded = new TextDecoder().decode(bytes);
+    }
+
+    const session = JSON.parse(decoded);
+    if (session?.user) return { user: session.user as User };
+  } catch {
+    // Cookie malformed or encoding changed — fall through
+  }
+  return null;
+}
+
 export function useAuthUser(): AuthState {
   const [state, setState] = useState<AuthState>({
     user: null,
@@ -18,49 +78,69 @@ export function useAuthUser(): AuthState {
   });
 
   useEffect(() => {
+    let cancelled = false;
     const supabase = createClient();
 
-    async function fetchRole(userId: string) {
-      const { data } = await supabase
-        .from("members")
-        .select("role")
-        .eq("id", userId)
-        .single();
-      return (data?.role as "member" | "admin") ?? null;
+    // ── Async helpers ──
+    async function fetchRole(
+      userId: string
+    ): Promise<"member" | "admin" | null> {
+      try {
+        const { data, error } = await supabase
+          .from("members")
+          .select("role")
+          .eq("id", userId)
+          .single();
+        if (error) return null;
+        return (data?.role as "member" | "admin") ?? null;
+      } catch {
+        return null;
+      }
     }
 
-    // Initial fetch
-    supabase.auth
-      .getUser()
-      .then(async ({ data: { user } }) => {
-        if (user) {
-          const role = await fetchRole(user.id);
-          setState({ user, role, loading: false });
-        } else {
-          setState({ user: null, role: null, loading: false });
+    // ── Instant path: read cookie directly (no locks, no network) ──
+    // Microtask avoids synchronous setState-in-effect while still resolving
+    // before the next browser paint.
+    const cookieSession = readSessionCookie();
+    void Promise.resolve().then(async () => {
+      if (cancelled) return;
+      if (cookieSession?.user) {
+        setState({ user: cookieSession.user, role: null, loading: false });
+        const role = await fetchRole(cookieSession.user.id);
+        if (!cancelled) {
+          setState((prev) =>
+            prev.user?.id === cookieSession.user.id
+              ? { ...prev, role }
+              : prev
+          );
         }
-      })
-      .catch(() => {
+      } else {
         setState({ user: null, role: null, loading: false });
-      });
+      }
+    });
 
-    // Listen for auth state changes
+    // ── Reactive path: onAuthStateChange for sign in/out/refresh ──
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      try {
-        if (session?.user) {
-          const role = await fetchRole(session.user.id);
+      if (cancelled) return;
+      if (session?.user) {
+        setState((prev) => ({
+          user: session.user,
+          role: prev.user?.id === session.user.id ? prev.role : null,
+          loading: false,
+        }));
+        const role = await fetchRole(session.user.id);
+        if (!cancelled) {
           setState({ user: session.user, role, loading: false });
-        } else {
-          setState({ user: null, role: null, loading: false });
         }
-      } catch {
-        setState({ user: session?.user ?? null, role: null, loading: false });
+      } else {
+        setState({ user: null, role: null, loading: false });
       }
     });
 
     return () => {
+      cancelled = true;
       subscription.unsubscribe();
     };
   }, []);
