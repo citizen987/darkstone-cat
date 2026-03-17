@@ -57,6 +57,8 @@
 | `/profile/card` | Member card preview & download (protected) |
 | `/admin` | Admin dashboard with stats (admin only) |
 | `/admin/members` | Member list with search, sort & CSV export (admin only) |
+| `/data-protection` | Data protection policy (RGPD) |
+| `/events/images` | Event image generator (admin only) |
 
 All routes are localized under `/[locale]/` (`ca`, `es`, `en`).
 

@@ -13,7 +13,8 @@
     "lighthouse:prod": "node scripts/lighthouse/run-audit.mjs --prod",
     "unlighthouse": "node scripts/unlighthouse/run-audit.mjs",
     "unlighthouse:prod": "node scripts/unlighthouse/run-audit.mjs --prod",
-    "unlighthouse:serve": "npx sirv-cli ./audits/unlighthouse --port 4000 --open"
+    "unlighthouse:serve": "npx sirv-cli ./audits/unlighthouse --port 4000 --open",
+    "migrate": "node scripts/migrate-members.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.9.0",
@@ -39,6 +40,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@unlighthouse/cli": "^0.17.7",
+    "csv-parse": "^6.1.0",
     "eslint": "^9",
     "eslint-config-next": "16.0.10",
     "lighthouse": "^13.0.3",

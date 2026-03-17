@@ -25,7 +25,7 @@ No test runner is configured.
 
 ### Lighthouse Audits
 
-Automated Lighthouse audits for all 8 pages (Catalan locale) on mobile + desktop (16 audits total). Scripts in `scripts/lighthouse/`:
+Automated Lighthouse audits for all pages (Catalan locale) on mobile + desktop. Scripts in `scripts/lighthouse/`:
 
 | File | Purpose |
 |---|---|
@@ -76,6 +76,8 @@ Next.js App Router with `next-intl` v4 for internationalization:
 | `/profile/card` | `profile/card/page.tsx` | Member card preview & download — protected route (`revalidate = false`, `noindex`) |
 | `/admin` | `admin/page.tsx` | Admin dashboard with stats and navigation — admin route (`revalidate = false`, `noindex`) |
 | `/admin/members` | `admin/members/page.tsx` | Member list with search, sort and CSV export — admin route (`revalidate = false`, `noindex`) |
+| `/data-protection` | `data-protection/page.tsx` | Data protection policy, RGPD compliance (`revalidate = false`) |
+| `/events/images` | `events/images/page.tsx` | Event image generator — admin route (`revalidate = false`, `noindex`) |
 
 API route: `src/app/api/contact/route.ts` — POST endpoint using Resend to send emails.
 API route: `src/app/api/members/card/route.ts` — GET endpoint for member card image (auth required). `?preview=1` for inline display, without for download.
@@ -140,8 +142,8 @@ All interactive components use `"use client"`. Components are organized by page:
 - `src/components/auth/` — Auth pages (AuthHero, LoginForm, RegisterForm, ForgotPasswordForm, ResetPasswordForm)
 - `src/components/profile/` — Profile pages (ProfileView, ProfileEditForm, MemberCard, DeleteAccountDialog)
 - `src/components/admin/` — Admin pages (AdminDashboard, MembersTable, ExportConfirmDialog)
-- `src/components/legal/` — Legal pages (LegalPageContent, LegalContent, PrivacyContent, CookiesContent)
-- Root-level: NavBar, Footer, SmoothScroll, CookieBanner, CookieConsentProvider, GoogleAnalytics, ScrollProgress, ScrollToTop, TextReveal, LanguageSwitcher, ThemeLink, ErrorContent
+- `src/components/legal/` — Legal pages (LegalPageContent, LegalContent, PrivacyContent, CookiesContent, DataProtectionContent)
+- Root-level: NavBar, Footer, SmoothScroll, CookieBanner, CookieConsentProvider, GoogleAnalytics, ScrollProgress, ScrollToTop, TextReveal, LanguageSwitcher, ThemeLink, ErrorContent, SkipLink, CollaboratorModal
 
 ### Ludoteca (Game Library)
 
@@ -167,7 +169,7 @@ Client state in `LudotecaClient.tsx`:
 - Server Action `src/lib/supabase/actions.ts`: `updateMemberAfterSignup()` — encrypts DNI/phone via `@/lib/encryption`
 - Hook `src/hooks/useAuthUser.ts`: reactive `{ user, role, loading }` via `onAuthStateChange`
 - Auth callback routes at `src/app/auth/` (outside `[locale]`): `/auth/confirm` (email — discards session cookies), `/auth/callback` (recovery — keeps session for password reset)
-- Middleware: explicit early return for `/auth/*` paths (prevents `next-intl` interference), PROTECTED_ROUTES require auth, AUTH_ROUTES redirect to `/` when logged in (temporary until `/profile` exists in Phase 3), `/reset-password` is in PROTECTED_ROUTES (not AUTH_ROUTES)
+- Middleware: explicit early return for `/auth/*` paths (prevents `next-intl` interference), PROTECTED_ROUTES require auth, AUTH_ROUTES redirect to `/profile` when logged in, `/reset-password` is in PROTECTED_ROUTES (not AUTH_ROUTES)
 
 ### Cookie Consent
 
@@ -236,10 +238,13 @@ The `public` schema is the primary working schema.
 | `BGG_USERNAME` | BoardGameGeek username for ludoteca collection |
 | `BGG_API_KEY` | BoardGameGeek XML API key |
 | `SUPABASE_SERVICE_ROLE_KEY` | Supabase service role key (server-only, for admin operations like account deletion) |
+| `ENCRYPTION_KEY` | 64-character hex string (32 bytes) for AES-256-GCM encryption of member DNI and phone |
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY` | Supabase publishable key for client-side auth |
 
 ## Translation Key Namespaces
 
-`nav`, `hero`, `about`, `activities`, `schedule`, `join_us`, `location`, `footer`, `about_page`, `ludoteca`, `contact_page`, `events`, `faq`, `cookies`, `conduct`, `legal`, `privacy`, `error_page`, `not_found`, `metadata`, `auth`, `profile`, `admin`
+`nav`, `hero`, `about`, `about_page`, `activities`, `schedule`, `join_us`, `location`, `footer`, `ludoteca`, `contact_page`, `events`, `event_images`, `faq`, `cookies`, `cookie_policy`, `conduct`, `legal`, `legal_notice`, `privacy`, `privacy_policy`, `data_protection`, `error_page`, `not_found`, `metadata`, `auth`, `profile`, `admin`, `collaborators`
 
 ## Path Alias
 
@@ -247,6 +252,7 @@ The `public` schema is the primary working schema.
 
 ## Key Dependencies
 
+- **@supabase/supabase-js** + **@supabase/ssr** — Supabase client and SSR auth (PKCE flow)
 - **motion** v12 (`motion/react`) — animations. Never import from `framer-motion`.
 - **lenis** — smooth scrolling
 - **next-intl** v4 — i18n routing and translations
@@ -255,6 +261,7 @@ The `public` schema is the primary working schema.
 - **react-icons** — icon library (Material Design `react-icons/md` + brand icons `react-icons/fa`)
 - **clsx** + **tailwind-merge** — class utilities (via `cn()`)
 - **@vercel/analytics** + **@vercel/speed-insights** — Vercel monitoring
+- **csv-parse** (dev) — CSV parsing for member migration script
 
 ## Gotchas
 

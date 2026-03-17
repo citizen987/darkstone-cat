@@ -47,7 +47,7 @@ export default async function ProfilePage({
   let email = "";
   let phone: string | null = null;
   let dni: string | null = null;
-  let member = profile?.member ?? null;
+  const member = profile?.member ?? null;
 
   if (profile) {
     email = profile.email;
