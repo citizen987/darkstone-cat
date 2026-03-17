@@ -57,6 +57,7 @@ const SUBPAGE_THEMES: Record<string, { text: string; bg: string }> = {
   "/profile/card": { text: "#FAFAF9", bg: "#1C1917" },
   "/admin": { text: "#FAFAF9", bg: "#1C1917" },
   "/admin/members": { text: "#FAFAF9", bg: "#1C1917" },
+  "/data-protection": { text: "#FAFAF9", bg: "#1C1917" },
 };
 
 export default function NavBar() {
@@ -64,7 +65,7 @@ export default function NavBar() {
   const pathname = usePathname();
   const lenis = useLenis();
   const isHomePage = pathname === "/";
-  const { user, role } = useAuthUser();
+  const { user, role, loading: authLoading } = useAuthUser();
 
   const [scrolled, setScrolled] = useState(false);
   const [homeActiveSection, setHomeActiveSection] = useState("");
@@ -313,7 +314,18 @@ export default function NavBar() {
 
             {/* Auth button (desktop) */}
             <div className="ml-3 relative" ref={dropdownRef}>
-              {user ? (
+              {authLoading ? (
+                <span
+                  className="rounded-xl px-4 py-2 text-sm font-medium"
+                  style={{
+                    backgroundColor: theme.text,
+                    color: theme.bg,
+                    transition: "background-color 0.4s, color 0.4s",
+                  }}
+                >
+                  {t("login")}
+                </span>
+              ) : user ? (
                 <>
                   <button
                     onClick={() => setDropdownOpen((o) => !o)}
@@ -478,7 +490,11 @@ export default function NavBar() {
                   : "nav-link-enter 0.4s ease-out 0.5s both",
               }}
             >
-              {user ? (
+              {authLoading ? (
+                <span className="rounded-xl bg-brand-white px-6 py-2.5 text-sm font-semibold text-stone-custom">
+                  {t("login")}
+                </span>
+              ) : user ? (
                 <>
                   <Link
                     href="/profile"

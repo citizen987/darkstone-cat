@@ -43,6 +43,7 @@ const LEGAL_LINKS = [
   { href: "/faq", key: "faq" },
   { href: "/legal", key: "legal" },
   { href: "/privacy", key: "privacy" },
+  { href: "/data-protection", key: "data_protection" },
   { href: "/cookies", key: "cookies" },
 ] as const;
 

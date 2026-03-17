@@ -29,6 +29,10 @@ const SECTIONS = [
     titleKey: "updates_title",
     paragraphs: ["updates_text"],
   },
+  {
+    titleKey: "association_policy_title",
+    paragraphs: ["association_policy_text"],
+  },
 ] as const;
 
 export default function PrivacyContent() {

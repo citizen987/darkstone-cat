@@ -502,7 +502,7 @@ export default function RegisterForm() {
                     {t.rich("register_privacy_checkbox", {
                       link: (chunks: ReactNode) => (
                         <Link
-                          href="/privacy"
+                          href="/data-protection"
                           target="_blank"
                           className="font-medium text-brand-orange-text underline transition-colors hover:text-brand-orange"
                         >

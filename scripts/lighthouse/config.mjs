@@ -14,6 +14,7 @@ export const PAGES = [
   { slug: 'legal', path: '/legal' },
   { slug: 'privacy', path: '/privacy' },
   { slug: 'cookies', path: '/cookies' },
+  { slug: 'data-protection', path: '/data-protection' },
   { slug: 'login', path: '/login' },
   { slug: 'register', path: '/register' },
   { slug: 'forgot-password', path: '/forgot-password' },
