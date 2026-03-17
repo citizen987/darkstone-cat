@@ -1,0 +1,3 @@
+-- Seed data for local development
+-- Auth users are created programmatically in tests via Supabase Admin API
+-- This keeps test setup explicit and isolated per test suite
