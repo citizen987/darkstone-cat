@@ -62,6 +62,7 @@ const nextConfig: NextConfig = {
     optimizePackageImports: ["react-icons"],
   },
   images: {
+    qualities: [60, 75],
     remotePatterns: [
       {
         protocol: "https",
