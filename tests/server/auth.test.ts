@@ -1,0 +1,149 @@
+import { describe, it, expect, vi } from 'vitest'
+import {
+  getCurrentUser,
+  getCurrentMember,
+  isAdmin,
+  getProfileData,
+} from '@/lib/supabase/auth'
+import { createClient } from '@/lib/supabase/server'
+
+vi.mock('@/lib/supabase/server', () => ({
+  createClient: vi.fn(),
+}))
+
+const mockUser = {
+  id: 'user-123',
+  email: 'test@darkstone.cat',
+  aud: 'authenticated',
+}
+
+const mockMember = {
+  id: 'user-123',
+  first_name: 'Test',
+  last_name: 'User',
+  member_number: 'DS-001',
+  role: 'member' as const,
+  is_active: true,
+  phone_encrypted: null,
+  dni_nie_encrypted: null,
+  postal_code: null,
+  ludoya_username: null,
+  bgg_username: null,
+  conduct_accepted: true,
+  conduct_accepted_at: '2026-01-01',
+  privacy_accepted: true,
+  privacy_accepted_at: '2026-01-01',
+  newsletter_accepted: false,
+  newsletter_accepted_at: null,
+  membership_start_date: '2026-01-01',
+  created_at: '2026-01-01',
+  updated_at: '2026-01-01',
+}
+
+function setupMock(opts: {
+  user?: typeof mockUser | null
+  userError?: { message: string } | null
+  member?: typeof mockMember | null
+  memberError?: { message: string } | null
+}) {
+  const client = {
+    auth: {
+      getUser: vi.fn().mockResolvedValue({
+        data: { user: opts.user ?? null },
+        error: opts.userError ?? null,
+      }),
+    },
+    from: vi.fn().mockReturnValue({
+      select: vi.fn().mockReturnValue({
+        eq: vi.fn().mockReturnValue({
+          single: vi.fn().mockResolvedValue({
+            data: opts.member ?? null,
+            error: opts.memberError ?? null,
+          }),
+        }),
+      }),
+    }),
+  }
+  vi.mocked(createClient).mockResolvedValue(client as any)
+  return client
+}
+
+describe('getCurrentUser', () => {
+  it('returns user when authenticated', async () => {
+    setupMock({ user: mockUser })
+    expect(await getCurrentUser()).toEqual(mockUser)
+  })
+
+  it('returns null when not authenticated', async () => {
+    setupMock({ user: null })
+    expect(await getCurrentUser()).toBeNull()
+  })
+})
+
+describe('getCurrentMember', () => {
+  it('returns member when user exists', async () => {
+    setupMock({ user: mockUser, member: mockMember })
+    expect(await getCurrentMember()).toEqual(mockMember)
+  })
+
+  it('returns null when user is not authenticated', async () => {
+    setupMock({ user: null })
+    expect(await getCurrentMember()).toBeNull()
+  })
+
+  it('returns null when member row not found', async () => {
+    setupMock({ user: mockUser, member: null })
+    expect(await getCurrentMember()).toBeNull()
+  })
+})
+
+describe('isAdmin', () => {
+  it('returns true for admin role', async () => {
+    setupMock({ user: mockUser, member: { ...mockMember, role: 'admin' } })
+    expect(await isAdmin()).toBe(true)
+  })
+
+  it('returns false for member role', async () => {
+    setupMock({ user: mockUser, member: mockMember })
+    expect(await isAdmin()).toBe(false)
+  })
+
+  it('returns false when not authenticated', async () => {
+    setupMock({ user: null })
+    expect(await isAdmin()).toBe(false)
+  })
+})
+
+describe('getProfileData', () => {
+  it('returns email and member on success', async () => {
+    setupMock({ user: mockUser, member: mockMember })
+    const data = await getProfileData()
+    expect(data).toEqual({
+      email: 'test@darkstone.cat',
+      member: mockMember,
+    })
+  })
+
+  it('returns null on auth error', async () => {
+    setupMock({ user: null, userError: { message: 'invalid token' } })
+    expect(await getProfileData()).toBeNull()
+  })
+
+  it('returns null when member query fails', async () => {
+    setupMock({
+      user: mockUser,
+      member: null,
+      memberError: { message: 'not found' },
+    })
+    expect(await getProfileData()).toBeNull()
+  })
+
+  it('returns empty string for missing email', async () => {
+    setupMock({
+      user: { ...mockUser, email: undefined } as any,
+      member: mockMember,
+    })
+    const data = await getProfileData()
+    expect(data?.email).toBe('')
+  })
+})

@@ -16,6 +16,8 @@
     "unlighthouse:serve": "npx sirv-cli ./audits/unlighthouse --port 4000 --open",
     "migrate": "node scripts/migrate-members.mjs",
     "test": "vitest run",
+    "test:unit": "vitest run --exclude 'tests/integration/**'",
+    "test:integration": "vitest run tests/integration",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",

@@ -13,6 +13,13 @@ const eslintConfig = defineConfig([
     "build/**",
     "next-env.d.ts",
   ]),
+  // Relax rules for test files — mocks require `any` casts
+  {
+    files: ["tests/**/*.{ts,tsx}", "e2e/**/*.{ts,tsx}"],
+    rules: {
+      "@typescript-eslint/no-explicit-any": "off",
+    },
+  },
 ]);
 
 export default eslintConfig;

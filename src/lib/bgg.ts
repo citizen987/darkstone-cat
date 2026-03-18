@@ -92,7 +92,7 @@ async function readMockXml(filename: string): Promise<string> {
   return fs.readFile(filePath, "utf-8");
 }
 
-interface RawCollectionItem {
+export interface RawCollectionItem {
   "@_objectid": string;
   "@_subtype": string;
   name: string | { "#text": string };
@@ -118,20 +118,20 @@ interface RawCollectionItem {
   };
 }
 
-function textValue(v: string | { "#text": string } | undefined): string {
+export function textValue(v: string | { "#text": string } | undefined): string {
   if (!v) return "";
   if (typeof v === "string") return v;
   return v["#text"] ?? "";
 }
 
-function parseCollectionItems(xml: string): RawCollectionItem[] {
+export function parseCollectionItems(xml: string): RawCollectionItem[] {
   const parsed = parser.parse(xml);
   const items = parsed?.items?.item;
   if (!items) return [];
   return Array.isArray(items) ? items : [items];
 }
 
-function extractRankTypes(ranks: unknown): string[] {
+export function extractRankTypes(ranks: unknown): string[] {
   if (!ranks) return [];
   const list = Array.isArray(ranks) ? ranks : [ranks];
   return list
@@ -144,7 +144,7 @@ function extractRankTypes(ranks: unknown): string[] {
     .map((r) => r["@_name"] as string);
 }
 
-function rawToGame(item: RawCollectionItem): BggGame {
+export function rawToGame(item: RawCollectionItem): BggGame {
   const rating = parseFloat(item.stats?.rating?.average?.["@_value"] ?? "0");
   const weight = parseFloat(item.stats?.rating?.averageweight?.["@_value"] ?? "0");
 
@@ -173,7 +173,7 @@ function rawToGame(item: RawCollectionItem): BggGame {
 // Expansion linking: name-based heuristic
 // ---------------------------------------------------------------------------
 
-function normalizeForMatch(name: string): string {
+export function normalizeForMatch(name: string): string {
   return name
     .toLowerCase()
     .replace(/[()[\]]/g, "")
@@ -181,7 +181,7 @@ function normalizeForMatch(name: string): string {
     .trim();
 }
 
-function linkExpansionsByName(
+export function linkExpansionsByName(
   baseGames: BggGame[],
   expansionItems: BggGame[]
 ): void {
@@ -275,7 +275,7 @@ function parseMockThings(xml: string): Map<string, ThingData> {
 // Expansion linking + enrichment via thing endpoint (production mode)
 // ---------------------------------------------------------------------------
 
-interface ThingData {
+export interface ThingData {
   weight: number;
   minAge: number;
   categories: string[];
@@ -351,7 +351,7 @@ async function fetchThingData(
   return result;
 }
 
-function linkExpansionsByThing(
+export function linkExpansionsByThing(
   baseGames: BggGame[],
   expansionItems: BggGame[],
   thingMap: Map<string, ThingData>
@@ -377,7 +377,7 @@ function linkExpansionsByThing(
   }
 }
 
-function enrichWithThingData(
+export function enrichWithThingData(
   games: BggGame[],
   thingMap: Map<string, ThingData>
 ): void {

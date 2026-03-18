@@ -1,5 +1,6 @@
 import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
+import { loadEnv } from 'vite'
 import path from 'path'
 
 export default defineConfig({
@@ -18,6 +19,8 @@ export default defineConfig({
       // Server-side tests use Node environment, not jsdom
       ['tests/server/**', 'node'],
       ['tests/lib/**', 'node'],
+      ['tests/integration/**', 'node'],
     ],
+    env: loadEnv('test', process.cwd(), ''),
   },
 })
