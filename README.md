@@ -119,6 +119,31 @@ Open [http://localhost:3000](http://localhost:3000) to see the site.
 | `npm run lint` | Run ESLint |
 | `npm run lighthouse` | Lighthouse audit (local build) |
 | `npm run lighthouse:prod` | Lighthouse audit (production) |
+| `npm test` | Run all Vitest tests (unit + integration) |
+| `npm run test:unit` | Unit tests only (no Supabase needed) |
+| `npm run test:integration` | Integration tests only (requires Supabase local) |
+| `npm run test:e2e` | Playwright E2E tests (starts dev server on port 3100) |
+| `npm run db:start` | Start local Supabase (requires Docker) |
+| `npm run db:stop` | Stop local Supabase |
+
+### Testing
+
+The project has three test layers:
+
+- **Unit tests** (Vitest) — Functions, hooks, components, API routes. No external dependencies needed.
+- **Integration tests** (Vitest + Supabase local) — RLS policies, triggers, auth flows against a real local database.
+- **E2E tests** (Playwright) — Full browser flows: auth, navigation, forms, profiles, admin, SEO.
+
+To run integration and E2E tests, start the local Supabase instance first:
+
+```bash
+npm run db:start        # Once — starts PostgreSQL, Auth, etc. via Docker
+npm test                # Unit + integration tests
+npm run test:e2e        # E2E tests (auto-starts dev server on port 3100)
+npm run db:stop         # When done
+```
+
+CI runs all tests automatically via GitHub Actions on push/PR to `main`.
 
 ### Environment Variables
 

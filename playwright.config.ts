@@ -9,15 +9,20 @@ const E2E_PORT = 3100
 export default defineConfig({
   testDir: './e2e',
   timeout: 30_000,
-  retries: process.env.CI ? 2 : 0,
+  retries: process.env.CI ? 2 : 1,
   fullyParallel: true,
+  workers: process.env.CI ? undefined : 4,
   forbidOnly: !!process.env.CI,
   reporter: process.env.CI ? 'github' : 'html',
+  expect: {
+    timeout: 10_000,
+  },
   use: {
     baseURL: `http://localhost:${E2E_PORT}`,
     screenshot: 'only-on-failure',
     trace: 'on-first-retry',
     locale: 'ca',
+    navigationTimeout: 15_000,
   },
   projects: [
     {

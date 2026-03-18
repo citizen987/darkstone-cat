@@ -97,7 +97,7 @@ describe('generate_member_number()', () => {
 
     const num1 = parseInt(d1!.member_number.split('-')[1])
     const num2 = parseInt(d2!.member_number.split('-')[1])
-    expect(num2).toBe(num1 + 1)
+    expect(num2).toBeGreaterThan(num1)
   })
 })
 

@@ -21,7 +21,27 @@ npm run lighthouse       # Lighthouse audit — local (build + start + audit + c
 npm run lighthouse:prod  # Lighthouse audit — production (darkstone.cat)
 ```
 
-No test runner is configured.
+### Testing
+
+Requires **Supabase local** running for integration and E2E tests (`npm run db:start`).
+
+```bash
+npm test                 # All Vitest tests (unit + integration)
+npm run test:unit        # Unit tests only (no Supabase needed)
+npm run test:integration # Integration tests only (Supabase needed)
+npm run test:watch       # Vitest in watch mode
+npm run test:coverage    # Vitest with coverage report
+npm run test:e2e         # Playwright E2E (starts dev server on port 3100)
+npm run test:e2e:ui      # Playwright with interactive UI
+npm run test:e2e:headed  # Playwright in headed browser mode
+npm run db:start         # Start local Supabase (Docker required)
+npm run db:stop          # Stop local Supabase
+npm run db:reset         # Reset local DB (re-applies migrations + seed)
+```
+
+Test structure: `tests/` (Vitest — unit, hooks, components, server, integration) and `e2e/` (Playwright — 14 specs). Config: `vitest.config.ts`, `playwright.config.ts`. Env: `.env.test.local`. CI: `.github/workflows/ci.yml` (5 parallel jobs).
+
+**After code changes**: run the relevant test suite (`npm test` for logic, `npm run test:e2e` for UI/flows). When adding new features, write corresponding tests before merging.
 
 ### Lighthouse Audits
 
