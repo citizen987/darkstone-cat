@@ -55,7 +55,7 @@ export default async function middleware(request: NextRequest) {
     }
   }
 
-  if (matchesRoute(bare, AUTH_ROUTES) && user) {
+  if (matchesRoute(bare, AUTH_ROUTES) && user && request.method === "GET") {
     const profileUrl = new URL(
       locale === "ca" ? "/profile" : `/${locale}/profile`,
       request.url

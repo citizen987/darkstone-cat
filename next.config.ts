@@ -10,6 +10,8 @@ const buildDate = new Date().toISOString().slice(0, 16).replace("T", " ");
 const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 const analyzer = withBundleAnalyzer({ enabled: process.env.ANALYZE === 'true' });
 
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "https://httvpxakxaycqbagybym.supabase.co";
+
 const securityHeaders = [
   {
     key: "X-DNS-Prefetch-Control",
@@ -43,7 +45,7 @@ const securityHeaders = [
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: blob: https://cf.geekdo-images.com https://img.ludoya.com https://www.googletagmanager.com",
       "font-src 'self'",
-      "connect-src 'self' https://*.google-analytics.com https://www.googletagmanager.com https://va.vercel-scripts.com https://vitals.vercel-insights.com https://httvpxakxaycqbagybym.supabase.co",
+      `connect-src 'self' https://*.google-analytics.com https://www.googletagmanager.com https://va.vercel-scripts.com https://vitals.vercel-insights.com ${supabaseUrl}`,
       "frame-src 'self' https://www.google.com",
       "frame-ancestors 'self'",
       "object-src 'none'",
@@ -54,6 +56,8 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  // Separate build directory for E2E tests to avoid lock conflicts with `npm run dev`
+  ...(process.env.NEXT_DIST_DIR ? { distDir: process.env.NEXT_DIST_DIR } : {}),
   env: {
     NEXT_PUBLIC_BUILD_VERSION: gitSha.slice(0, 7),
     NEXT_PUBLIC_BUILD_DATE: buildDate,
