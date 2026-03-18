@@ -23,21 +23,14 @@ const mockMember = {
   last_name: 'User',
   member_number: 'DS-001',
   role: 'member' as const,
-  is_active: true,
   phone_encrypted: null,
   dni_nie_encrypted: null,
   postal_code: null,
   ludoya_username: null,
   bgg_username: null,
-  conduct_accepted: true,
-  conduct_accepted_at: '2026-01-01',
-  privacy_accepted: true,
-  privacy_accepted_at: '2026-01-01',
   newsletter_accepted: false,
-  newsletter_accepted_at: null,
   membership_start_date: '2026-01-01',
   created_at: '2026-01-01',
-  updated_at: '2026-01-01',
 }
 
 function setupMock(opts: {

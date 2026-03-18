@@ -3,33 +3,31 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { motion } from "motion/react";
-import { MdPeople, MdPersonAdd, MdPersonOff, MdEmail, MdChevronRight, MdImage } from "react-icons/md";
+import { MdPeople, MdPersonAdd, MdEmail, MdChevronRight, MdImage } from "react-icons/md";
 
 type AdminDashboardProps = {
   stats: {
-    totalActive: number;
+    total: number;
     newThisMonth: number;
-    inactive: number;
     newsletter: number;
   };
 };
 
 const STAT_CARDS = [
-  { key: "stat_active", icon: MdPeople, color: "text-emerald-600" },
+  { key: "stat_total", icon: MdPeople, color: "text-emerald-600" },
   { key: "stat_new_month", icon: MdPersonAdd, color: "text-blue-600" },
-  { key: "stat_inactive", icon: MdPersonOff, color: "text-stone-custom/50" },
   { key: "stat_newsletter", icon: MdEmail, color: "text-brand-orange-text" },
 ] as const;
 
 export default function AdminDashboard({ stats }: AdminDashboardProps) {
   const t = useTranslations("admin");
 
-  const statValues = [stats.totalActive, stats.newThisMonth, stats.inactive, stats.newsletter];
+  const statValues = [stats.total, stats.newThisMonth, stats.newsletter];
 
   return (
     <div className="space-y-8">
       {/* Stat cards */}
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         {STAT_CARDS.map((card, i) => {
           const Icon = card.icon;
           return (

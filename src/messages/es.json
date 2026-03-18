@@ -735,9 +735,8 @@
     "unauthorized_title": "Acceso restringido",
     "unauthorized_message": "Necesitas permisos de administrador para acceder a esta página.",
 
-    "stat_active": "Socios activos",
+    "stat_total": "Total socios",
     "stat_new_month": "Nuevos este mes",
-    "stat_inactive": "Inactivos",
     "stat_newsletter": "Boletín",
 
     "nav_members": "Gestión de socios",
@@ -757,13 +756,10 @@
     "col_phone": "Teléfono",
     "col_dni": "DNI/NIE",
     "col_role": "Rol",
-    "col_status": "Estado",
     "col_since": "Desde",
 
     "role_member": "Socio",
     "role_admin": "Admin",
-    "status_active": "Activo",
-    "status_inactive": "Inactivo",
     "not_provided": "—",
 
     "export_button": "Exportar CSV",

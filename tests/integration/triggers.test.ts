@@ -23,7 +23,6 @@ describe('handle_new_user() trigger', () => {
     expect(data).not.toBeNull()
     expect(data!.id).toBe(user.id)
     expect(data!.role).toBe('member')
-    expect(data!.is_active).toBe(true)
   })
 
   it('copies first_name and last_name from user_metadata', async () => {
@@ -101,33 +100,3 @@ describe('generate_member_number()', () => {
   })
 })
 
-describe('update_updated_at() trigger', () => {
-  it('updates updated_at on member modification', async () => {
-    const user = await createTestUser('trigger-upd@test.local', 'password123')
-    userIds.push(user.id)
-
-    const { data: before } = await supabaseAdmin
-      .from('members')
-      .select('updated_at')
-      .eq('id', user.id)
-      .single()
-
-    // Small delay to ensure timestamp differs
-    await new Promise((r) => setTimeout(r, 50))
-
-    await supabaseAdmin
-      .from('members')
-      .update({ postal_code: '08221' })
-      .eq('id', user.id)
-
-    const { data: after } = await supabaseAdmin
-      .from('members')
-      .select('updated_at')
-      .eq('id', user.id)
-      .single()
-
-    expect(new Date(after!.updated_at).getTime()).toBeGreaterThan(
-      new Date(before!.updated_at).getTime()
-    )
-  })
-})

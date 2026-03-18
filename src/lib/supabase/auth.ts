@@ -14,16 +14,9 @@ export type Member = {
   ludoya_username: string | null;
   bgg_username: string | null;
   role: "member" | "admin";
-  is_active: boolean;
-  conduct_accepted: boolean;
-  conduct_accepted_at: string | null;
-  privacy_accepted: boolean;
-  privacy_accepted_at: string | null;
   newsletter_accepted: boolean;
-  newsletter_accepted_at: string | null;
   membership_start_date: string | null;
   created_at: string;
-  updated_at: string;
 };
 
 export async function getCurrentUser(): Promise<User | null> {

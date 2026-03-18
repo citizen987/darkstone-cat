@@ -102,46 +102,6 @@ describe('profile update via authenticated client (RLS enforced)', () => {
     expect(data!.phone_encrypted).toBeNull()
   })
 
-  it('sets newsletter timestamp when accepted', async () => {
-    const client = await createAuthenticatedClient(
-      'profile-upd@test.local',
-      'password123'
-    )
-    const now = new Date().toISOString()
-    await client
-      .from('members')
-      .update({ newsletter_accepted: true, newsletter_accepted_at: now })
-      .eq('id', user.id)
-
-    const { data } = await client
-      .from('members')
-      .select('newsletter_accepted, newsletter_accepted_at')
-      .eq('id', user.id)
-      .single()
-
-    expect(data!.newsletter_accepted).toBe(true)
-    expect(data!.newsletter_accepted_at).toBeTruthy()
-  })
-
-  it('clears newsletter timestamp when rejected', async () => {
-    const client = await createAuthenticatedClient(
-      'profile-upd@test.local',
-      'password123'
-    )
-    await client
-      .from('members')
-      .update({ newsletter_accepted: false, newsletter_accepted_at: null })
-      .eq('id', user.id)
-
-    const { data } = await client
-      .from('members')
-      .select('newsletter_accepted, newsletter_accepted_at')
-      .eq('id', user.id)
-      .single()
-
-    expect(data!.newsletter_accepted).toBe(false)
-    expect(data!.newsletter_accepted_at).toBeNull()
-  })
 })
 
 describe('DNI/NIE validation regex', () => {

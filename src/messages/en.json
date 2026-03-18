@@ -735,9 +735,8 @@
     "unauthorized_title": "Restricted access",
     "unauthorized_message": "You need administrator permissions to access this page.",
 
-    "stat_active": "Active members",
+    "stat_total": "Total members",
     "stat_new_month": "New this month",
-    "stat_inactive": "Inactive",
     "stat_newsletter": "Newsletter",
 
     "nav_members": "Member management",
@@ -757,13 +756,10 @@
     "col_phone": "Phone",
     "col_dni": "ID (DNI/NIE)",
     "col_role": "Role",
-    "col_status": "Status",
     "col_since": "Since",
 
     "role_member": "Member",
     "role_admin": "Admin",
-    "status_active": "Active",
-    "status_inactive": "Inactive",
     "not_provided": "—",
 
     "export_button": "Export CSV",

@@ -10,8 +10,6 @@ type SignupData = {
   postal_code?: string;
   ludoya_username?: string;
   bgg_username?: string;
-  conduct_accepted: boolean;
-  privacy_accepted: boolean;
   newsletter_accepted: boolean;
 };
 
@@ -24,13 +22,7 @@ export async function updateMemberAfterSignup(
 
   const supabase = createAdminClient();
 
-  const now = new Date().toISOString();
-
   const updatePayload: Record<string, unknown> = {
-    conduct_accepted: data.conduct_accepted,
-    conduct_accepted_at: data.conduct_accepted ? now : null,
-    privacy_accepted: data.privacy_accepted,
-    privacy_accepted_at: data.privacy_accepted ? now : null,
     newsletter_accepted: data.newsletter_accepted,
   };
 

@@ -15,11 +15,10 @@ export type MemberRow = {
   dniMasked: string | null;
   postalCode: string | null;
   role: "member" | "admin";
-  isActive: boolean;
   membershipStartDate: string | null;
 };
 
-type SortColumn = "memberNumber" | "name" | "email" | "role" | "isActive" | "membershipStartDate";
+type SortColumn = "memberNumber" | "name" | "email" | "role" | "membershipStartDate";
 type SortDirection = "asc" | "desc";
 
 const PAGE_SIZE = 15;
@@ -66,9 +65,6 @@ export default function MembersTable({ members }: MembersTableProps) {
           break;
         case "role":
           cmp = a.role.localeCompare(b.role);
-          break;
-        case "isActive":
-          cmp = Number(b.isActive) - Number(a.isActive);
           break;
         case "membershipStartDate": {
           const da = a.membershipStartDate ?? "";
@@ -162,14 +158,13 @@ export default function MembersTable({ members }: MembersTableProps) {
               <th className="whitespace-nowrap px-4 py-3 text-left text-sm font-semibold text-stone-custom/70">{t("col_phone")}</th>
               <th className="whitespace-nowrap px-4 py-3 text-left text-sm font-semibold text-stone-custom/70">{t("col_dni")}</th>
               {renderSortableTh("role", t("col_role"))}
-              {renderSortableTh("isActive", t("col_status"))}
               {renderSortableTh("membershipStartDate", t("col_since"))}
             </tr>
           </thead>
           <tbody>
             {paged.length === 0 ? (
               <tr>
-                <td colSpan={8} className="px-4 py-8 text-center text-stone-custom/50">
+                <td colSpan={7} className="px-4 py-8 text-center text-stone-custom/50">
                   {t("members_no_results")}
                 </td>
               </tr>
@@ -186,13 +181,6 @@ export default function MembersTable({ members }: MembersTableProps) {
                       <span className="rounded-full bg-brand-orange/10 px-2.5 py-0.5 text-xs font-semibold text-brand-orange-text">{t("role_admin")}</span>
                     ) : (
                       <span className="text-stone-custom/70">{t("role_member")}</span>
-                    )}
-                  </td>
-                  <td className="whitespace-nowrap px-4 py-3 text-sm">
-                    {m.isActive ? (
-                      <span className="rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-semibold text-emerald-700">{t("status_active")}</span>
-                    ) : (
-                      <span className="rounded-full bg-red-50 px-2.5 py-0.5 text-xs font-semibold text-red-700">{t("status_inactive")}</span>
                     )}
                   </td>
                   <td className="whitespace-nowrap px-4 py-3 text-sm text-stone-custom/60">{m.membershipStartDate ?? t("not_provided")}</td>
@@ -217,11 +205,6 @@ export default function MembersTable({ members }: MembersTableProps) {
                 <div className="flex items-center gap-2">
                   {m.role === "admin" && (
                     <span className="rounded-full bg-brand-orange/10 px-2 py-0.5 text-xs font-semibold text-brand-orange-text">{t("role_admin")}</span>
-                  )}
-                  {m.isActive ? (
-                    <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-semibold text-emerald-700">{t("status_active")}</span>
-                  ) : (
-                    <span className="rounded-full bg-red-50 px-2 py-0.5 text-xs font-semibold text-red-700">{t("status_inactive")}</span>
                   )}
                 </div>
               </div>

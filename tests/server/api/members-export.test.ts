@@ -53,7 +53,6 @@ const fakeMember = {
   ludoya_username: null,
   bgg_username: null,
   role: 'member',
-  is_active: true,
   newsletter_accepted: true,
   membership_start_date: '2026-01-01',
   created_at: '2026-01-01',

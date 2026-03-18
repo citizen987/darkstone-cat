@@ -46,8 +46,6 @@ export async function updateMemberProfile(
     return { error: "Invalid DNI/NIE format." };
   }
 
-  const now = new Date().toISOString();
-
   const updatePayload: Record<string, unknown> = {
     first_name: data.first_name.trim(),
     last_name: data.last_name.trim(),
@@ -55,15 +53,7 @@ export async function updateMemberProfile(
     ludoya_username: data.ludoya_username?.trim() || null,
     bgg_username: data.bgg_username?.trim() || null,
     newsletter_accepted: data.newsletter_accepted,
-    updated_at: now,
   };
-
-  if (data.newsletter_accepted) {
-    // Only set the timestamp if switching from off → on; preserve existing timestamp otherwise
-    updatePayload.newsletter_accepted_at = now;
-  } else {
-    updatePayload.newsletter_accepted_at = null;
-  }
 
   if (data.phone?.trim()) {
     updatePayload.phone_encrypted = encrypt(data.phone.trim());
@@ -142,15 +132,9 @@ export async function exportProfileData(): Promise<{
     ludoya_username: member.ludoya_username,
     bgg_username: member.bgg_username,
     role: member.role,
-    is_active: member.is_active,
     newsletter_accepted: member.newsletter_accepted,
     membership_start_date: member.membership_start_date,
-    conduct_accepted: member.conduct_accepted,
-    conduct_accepted_at: member.conduct_accepted_at,
-    privacy_accepted: member.privacy_accepted,
-    privacy_accepted_at: member.privacy_accepted_at,
     created_at: member.created_at,
-    updated_at: member.updated_at,
     exported_at: new Date().toISOString(),
   };
 

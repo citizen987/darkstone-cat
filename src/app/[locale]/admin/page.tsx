@@ -58,19 +58,18 @@ export default async function AdminPage({
   );
 
   // Compute stats only if admin
-  let stats = { totalActive: 0, newThisMonth: 0, inactive: 0, newsletter: 0 };
+  let stats = { total: 0, newThisMonth: 0, newsletter: 0 };
   if (admin) {
     const { data: members } = await getAllMembers();
     if (members) {
       const now = new Date();
       const firstOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
       stats = {
-        totalActive: members.filter((m) => m.is_active).length,
+        total: members.length,
         newThisMonth: members.filter((m) => {
           if (!m.created_at) return false;
           return new Date(m.created_at) >= firstOfMonth;
         }).length,
-        inactive: members.filter((m) => !m.is_active).length,
         newsletter: members.filter((m) => m.newsletter_accepted).length,
       };
     }

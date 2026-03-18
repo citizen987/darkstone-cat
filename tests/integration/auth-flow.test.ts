@@ -29,7 +29,6 @@ describe('signup → member creation', () => {
     expect(data!.first_name).toBe('Signup')
     expect(data!.last_name).toBe('Test')
     expect(data!.role).toBe('member')
-    expect(data!.is_active).toBe(true)
     expect(data!.member_number).toMatch(/^000-\d{3}$/)
     expect(data!.membership_start_date).toBeTruthy()
   })
@@ -49,8 +48,6 @@ describe('updateMemberAfterSignup with real DB', () => {
       dni: '12345678A',
       postal_code: '08221',
       ludoya_username: 'testuser',
-      conduct_accepted: true,
-      privacy_accepted: true,
       newsletter_accepted: false,
     })
 
@@ -65,10 +62,6 @@ describe('updateMemberAfterSignup with real DB', () => {
     // Plain fields
     expect(data!.postal_code).toBe('08221')
     expect(data!.ludoya_username).toBe('testuser')
-    expect(data!.conduct_accepted).toBe(true)
-    expect(data!.conduct_accepted_at).toBeTruthy()
-    expect(data!.privacy_accepted).toBe(true)
-    expect(data!.privacy_accepted_at).toBeTruthy()
     expect(data!.newsletter_accepted).toBe(false)
 
     // Encrypted fields — stored encrypted, decryptable

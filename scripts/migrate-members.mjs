@@ -286,8 +286,6 @@ function cleanData(rows) {
     const postalCode = row.postal_code.trim();
     const { first_name, last_name } = normalizeName(row.full_name);
     const { date: membershipStartDate, iso: timestampIso } = parseTimestamp(row.timestamp_raw);
-    const conductAccepted = parseBool(row.conduct_raw);
-    const privacyAccepted = parseBool(row.privacy_raw);
     const newsletterAccepted = parseBool(row.newsletter_raw);
 
     // Validation warnings
@@ -323,8 +321,6 @@ function cleanData(rows) {
       postal_code: postalCode,
       membership_start_date: membershipStartDate,
       timestamp_iso: timestampIso,
-      conduct_accepted: conductAccepted,
-      privacy_accepted: privacyAccepted,
       newsletter_accepted: newsletterAccepted,
     });
   }
@@ -417,12 +413,7 @@ async function importMember(supabase, member, existingUsers) {
     first_name: member.first_name,
     last_name: member.last_name,
     postal_code: member.postal_code,
-    conduct_accepted: true,
-    conduct_accepted_at: member.timestamp_iso,
-    privacy_accepted: true,
-    privacy_accepted_at: member.timestamp_iso,
     newsletter_accepted: member.newsletter_accepted,
-    newsletter_accepted_at: member.newsletter_accepted ? member.timestamp_iso : null,
     membership_start_date: member.membership_start_date,
   };
 

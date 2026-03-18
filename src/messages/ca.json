@@ -735,9 +735,8 @@
     "unauthorized_title": "Accés restringit",
     "unauthorized_message": "Necessites permisos d'administrador per accedir a aquesta pàgina.",
 
-    "stat_active": "Socis actius",
+    "stat_total": "Total socis",
     "stat_new_month": "Nous aquest mes",
-    "stat_inactive": "Inactius",
     "stat_newsletter": "Butlletí",
 
     "nav_members": "Gestió de socis",
@@ -757,13 +756,10 @@
     "col_phone": "Telèfon",
     "col_dni": "DNI/NIE",
     "col_role": "Rol",
-    "col_status": "Estat",
     "col_since": "Des de",
 
     "role_member": "Soci",
     "role_admin": "Admin",
-    "status_active": "Actiu",
-    "status_inactive": "Inactiu",
     "not_provided": "—",
 
     "export_button": "Exportar CSV",

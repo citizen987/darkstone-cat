@@ -29,8 +29,6 @@ describe('updateMemberAfterSignup', () => {
 
   const baseData = {
     userId: 'user-1',
-    conduct_accepted: true,
-    privacy_accepted: true,
     newsletter_accepted: false,
   }
 
@@ -80,26 +78,6 @@ describe('updateMemberAfterSignup', () => {
     expect(payload.postal_code).toBe('08221')
     expect(payload.ludoya_username).toBe('darkstone')
     expect(payload.bgg_username).toBe('darkstone_bcn')
-  })
-
-  it('sets acceptance timestamps when accepted', async () => {
-    await updateMemberAfterSignup(baseData)
-    const payload = mockUpdatePayload.mock.calls[0][0]
-    expect(payload.conduct_accepted).toBe(true)
-    expect(payload.conduct_accepted_at).toBeTruthy()
-    expect(payload.privacy_accepted).toBe(true)
-    expect(payload.privacy_accepted_at).toBeTruthy()
-  })
-
-  it('sets null timestamps when not accepted', async () => {
-    await updateMemberAfterSignup({
-      ...baseData,
-      conduct_accepted: false,
-      privacy_accepted: false,
-    })
-    const payload = mockUpdatePayload.mock.calls[0][0]
-    expect(payload.conduct_accepted_at).toBeNull()
-    expect(payload.privacy_accepted_at).toBeNull()
   })
 
   it('targets the correct user ID', async () => {

@@ -114,8 +114,6 @@ export default function RegisterForm() {
       postal_code: formData.get("postal_code") as string,
       ludoya_username: formData.get("ludoya_username") as string,
       bgg_username: formData.get("bgg_username") as string,
-      conduct_accepted: !!formData.get("conduct"),
-      privacy_accepted: !!formData.get("privacy"),
       newsletter_accepted: !!formData.get("newsletter"),
     });
 

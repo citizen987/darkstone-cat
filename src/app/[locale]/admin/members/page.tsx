@@ -93,7 +93,6 @@ export default async function AdminMembersPage({
           dniMasked,
           postalCode: m.postal_code,
           role: m.role as "member" | "admin",
-          isActive: m.is_active,
           membershipStartDate: m.membership_start_date,
         };
       });
