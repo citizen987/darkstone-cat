@@ -664,7 +664,7 @@
     "reset_error_mismatch": "Las contraseñas no coinciden.",
     "reset_error_too_short": "La contraseña debe tener al menos 8 caracteres.",
     "reset_error_generic": "Se ha producido un error. Inténtalo de nuevo.",
-    "reset_go_to_login": "Ir a iniciar sesión",
+    "reset_redirecting": "Redirigiendo a tu perfil...",
 
     "required_field": "Este campo es obligatorio.",
     "invalid_email": "Introduce un correo electrónico válido.",

@@ -664,7 +664,7 @@
     "reset_error_mismatch": "Passwords do not match.",
     "reset_error_too_short": "Password must be at least 8 characters.",
     "reset_error_generic": "An error occurred. Please try again.",
-    "reset_go_to_login": "Go to log in",
+    "reset_redirecting": "Redirecting to your profile...",
 
     "required_field": "This field is required.",
     "invalid_email": "Enter a valid email address.",

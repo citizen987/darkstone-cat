@@ -664,7 +664,7 @@
     "reset_error_mismatch": "Les contrasenyes no coincideixen.",
     "reset_error_too_short": "La contrasenya ha de tenir almenys 8 caràcters.",
     "reset_error_generic": "S'ha produït un error. Torna-ho a provar.",
-    "reset_go_to_login": "Anar a iniciar sessió",
+    "reset_redirecting": "Redirigint al teu perfil...",
 
     "required_field": "Aquest camp és obligatori.",
     "invalid_email": "Introdueix un correu electrònic vàlid.",

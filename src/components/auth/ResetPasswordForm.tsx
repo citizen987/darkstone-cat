@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState, useEffect, type FormEvent } from "react";
 import { useTranslations } from "next-intl";
-import { Link } from "@/i18n/routing";
+import { useRouter } from "@/i18n/routing";
 import { motion, AnimatePresence } from "motion/react";
 import { createClient } from "@/lib/supabase/client";
 
@@ -13,8 +13,11 @@ type FieldErrors = {
   confirm?: string;
 };
 
+const REDIRECT_DELAY_MS = 3000;
+
 export default function ResetPasswordForm() {
   const t = useTranslations("auth");
+  const router = useRouter();
   const [status, setStatus] = useState<FormStatus>("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const [errors, setErrors] = useState<FieldErrors>({});
@@ -57,10 +60,14 @@ export default function ResetPasswordForm() {
       return;
     }
 
-    // Sign out after password change so user logs in fresh
-    await supabase.auth.signOut();
     setStatus("success");
   }
+
+  useEffect(() => {
+    if (status !== "success") return;
+    const timer = setTimeout(() => router.push("/profile"), REDIRECT_DELAY_MS);
+    return () => clearTimeout(timer);
+  }, [status, router]);
 
   const isSubmitting = status === "submitting";
 
@@ -99,12 +106,9 @@ export default function ResetPasswordForm() {
             <p className="mb-6 max-w-sm text-sm text-green-700/80">
               {t("reset_success_message")}
             </p>
-            <Link
-              href="/login"
-              className="rounded-xl bg-green-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-green-700"
-            >
-              {t("reset_go_to_login")}
-            </Link>
+            <p className="text-xs text-green-600/70">
+              {t("reset_redirecting")}
+            </p>
           </motion.div>
         ) : (
           <motion.form
