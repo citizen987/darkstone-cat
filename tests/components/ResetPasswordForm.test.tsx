@@ -141,6 +141,20 @@ describe('ResetPasswordForm', () => {
     expect(mockPush).not.toHaveBeenCalled()
   })
 
+  it('shows error message when updateUser throws an exception', async () => {
+    mockUpdateUser.mockRejectedValue(new Error('network failure'))
+
+    render(<ResetPasswordForm />)
+    fillAndSubmit()
+
+    await waitFor(() => {
+      expect(screen.getByRole('alert')).toBeInTheDocument()
+      expect(screen.getByText('reset_error_generic')).toBeInTheDocument()
+    })
+
+    expect(mockPush).not.toHaveBeenCalled()
+  })
+
   it('disables inputs and shows loading text while submitting', async () => {
     let resolveUpdate!: (v: any) => void
     mockUpdateUser.mockReturnValue(

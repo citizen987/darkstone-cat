@@ -120,9 +120,14 @@ export function useAuthUser(): AuthState {
     });
 
     // ── Reactive path: onAuthStateChange for sign in/out/refresh ──
+    // IMPORTANT: This callback must be synchronous (not async) to avoid a
+    // deadlock with Supabase's Navigator Lock. _notifyAllSubscribers awaits
+    // all async callbacks; if fetchRole (which needs getSession → lock) runs
+    // inside an awaited callback while the lock is held by the triggering
+    // operation (e.g. updateUser), it creates a circular wait.
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    } = supabase.auth.onAuthStateChange((_event, session) => {
       if (cancelled) return;
       if (session?.user) {
         setState((prev) => ({
@@ -130,10 +135,11 @@ export function useAuthUser(): AuthState {
           role: prev.user?.id === session.user.id ? prev.role : null,
           loading: false,
         }));
-        const role = await fetchRole(session.user.id);
-        if (!cancelled) {
-          setState({ user: session.user, role, loading: false });
-        }
+        fetchRole(session.user.id).then((role) => {
+          if (!cancelled) {
+            setState({ user: session.user, role, loading: false });
+          }
+        });
       } else {
         setState({ user: null, role: null, loading: false });
       }

@@ -51,16 +51,21 @@ export default function ResetPasswordForm() {
     setStatus("submitting");
     setErrorMessage("");
 
-    const supabase = createClient();
-    const { error } = await supabase.auth.updateUser({ password });
+    try {
+      const supabase = createClient();
+      const { error } = await supabase.auth.updateUser({ password });
 
-    if (error) {
+      if (error) {
+        setStatus("error");
+        setErrorMessage(t("reset_error_generic"));
+        return;
+      }
+
+      setStatus("success");
+    } catch {
       setStatus("error");
       setErrorMessage(t("reset_error_generic"));
-      return;
     }
-
-    setStatus("success");
   }
 
   useEffect(() => {
